@@ -18,13 +18,14 @@
   .sub-status{font-size:11px;border-bottom:1px solid #39ff14;padding-bottom:10px;margin-bottom:20px}
   .section-title{font-size:14px;font-weight:bold;color:#ffcc00;margin-bottom:10px;text-align:left;border-left:4px solid #ffcc00;padding-left:8px}
   .checker-box{border:2px solid #ffcc00;border-radius:15px;padding:15px;margin-bottom:20px;background:rgba(255,204,0,0.05)}
-  .checker-box textarea{width:100%;height:80px;background:#000;border:1px solid #39ff14;border-radius:10px;color:#39ff14;padding:10px;font-size:12px;resize:none;outline:none;font-family:'Share Tech Mono',monospace;box-sizing:border-box}
+  .checker-box textarea{width:100%;height:100px;background:#000;border:1px solid #39ff14;border-radius:10px;color:#39ff14;padding:10px;font-size:12px;resize:none;outline:none;font-family:'Share Tech Mono',monospace;box-sizing:border-box}
   .checker-box textarea::placeholder{color:rgba(57,255,20,0.4)}
   .check-btn{background:#ffcc00;color:#000;border:none;border-radius:12px;padding:12px;width:100%;font-size:14px;font-weight:bold;cursor:pointer;margin-top:10px;box-shadow:0 0 10px #ffcc00}
   .check-btn:hover{transform:scale(1.02);box-shadow:0 0 20px #ffcc00}
   .check-result{margin-top:10px;font-size:13px;font-weight:bold;padding:8px;border-radius:10px;display:none}
   .check-result.valid{display:block;background:rgba(57,255,20,0.15);border:1px solid #39ff14;color:#39ff14}
   .check-result.invalid{display:block;background:rgba(255,0,0,0.15);border:1px solid #ff0000;color:#ff0000}
+  .normalized-box{margin-top:10px;font-size:11px;padding:8px;border-radius:10px;background:rgba(57,255,20,0.08);border:1px dashed #39ff14;color:#39ff14;word-break:break-all;display:none;text-align:left;font-family:monospace}
   .upload-btn-wrapper{position:relative;overflow:hidden;display:inline-block;width:100%;margin-bottom:15px}
   .upload-btn{border:2px dashed #39ff14;color:#39ff14;background:transparent;padding:12px 20px;border-radius:15px;font-size:13px;font-weight:bold;width:100%;cursor:pointer}
   .upload-btn:hover{background-color:rgba(57,255,20,0.1);box-shadow:0 0 15px #39ff14}
@@ -46,7 +47,7 @@
   @keyframes pulseBypass{0%{box-shadow:0 0 10px #ff0044}50%{box-shadow:0 0 25px #ff0044,0 0 40px #ff0044}100%{box-shadow:0 0 10px #ff0044}}
   .cookie-box{border:2px solid #39ff14;border-radius:20px;padding:12px;margin-bottom:15px;font-size:13px}
   .cookie-count{color:#ffcc00;font-weight:bold}
-  .token-display{margin-top:15px;font-size:12px;word-break:break-all;border:1px dashed #39ff14;padding:10px;border-radius:10px;display:none;background:rgba(57,255,20,0.05);color:#fff}
+  .token-display{margin-top:15px;font-size:12px;word-break:break-all;border:1px dashed #39ff14;padding:10px;border-radius:10px;display:none;background:rgba(57,255,20,0.05);color:#fff;text-align:left}
   .footer{margin-top:25px;font-size:11px;color:#39ff14;display:flex;flex-direction:column;gap:8px;align-items:center}
   .made-by{font-size:13px;font-weight:bold;color:#000;background:#39ff14;padding:6px 15px;border-radius:20px;box-shadow:0 0 15px #39ff14;text-transform:uppercase;letter-spacing:2px}
 </style>
@@ -59,9 +60,10 @@
 
   <div class="checker-box">
     <div class="section-title">SINGLE COOKIE CHECKER</div>
-    <textarea id="singleCookieInput" placeholder="paste netflix cookie here (any format works)"></textarea>
+    <textarea id="singleCookieInput" placeholder="paste netflix cookie here (any format works - devtools table, string, json)"></textarea>
     <button class="check-btn" onclick="checkSingleCookie()">CHECK COOKIE</button>
     <div class="check-result" id="singleCheckResult"></div>
+    <div class="normalized-box" id="normalizedBox"></div>
   </div>
 
   <div class="cookie-box">
@@ -87,7 +89,7 @@
   <button class="generate-btn" onclick="generateToken()">GENERATE TOKEN</button>
 
   <div class="action-buttons" id="actionButtons">
-    <a href="https://www.netflix.com/login" class="action-btn app-btn" id="appRedirectBtn">OPEN IN NETFLIX APP</a>
+    <a href="nflx://www.netflix.com/" class="action-btn app-btn" id="appRedirectBtn">OPEN IN NETFLIX APP</a>
     <button class="action-btn dl-btn" onclick="downloadExtension()">DOWNLOAD BYPASS EXTENSION</button>
     <button class="action-btn bypass-btn" onclick="bypassAndOpen()">BYPASS &amp; OPEN NETFLIX</button>
   </div>
@@ -98,13 +100,13 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script>
-let selectedPlatform='mobile';
-let lastValidCookie='';
+var selectedPlatform='mobile';
+var lastValidCookie='';
 
 function updateClock(){document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-US',{hour12:false})}
 setInterval(updateClock,1000);updateClock();
 
-function selectPlatform(btn){document.querySelectorAll('.platform-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');selectedPlatform=btn.dataset.p}
+function selectPlatform(btn){var all=document.querySelectorAll('.platform-btn');for(var i=0;i<all.length;i++)all[i].classList.remove('active');btn.classList.add('active');selectedPlatform=btn.dataset.p}
 
 function playBeep(freq){
   try{
@@ -115,61 +117,71 @@ function playBeep(freq){
   }catch(e){}
 }
 
-// auto-detect and normalize ANY cookie format
 function extractCookies(raw){
   if(!raw) return '';
-  var out=[];
   var keep=['netflixid','securenetflixid','nfvdid'];
+  var out={};
 
-  // format 1: standard cookie string  NetflixId=...; SecureNetflixId=...
-  if(raw.indexOf('=')>-1 && raw.indexOf('\t')===-1){
+  // chrome devtools table format:  domain \t flag \t path \t secure \t expiry \t name \t value
+  var lines=raw.split('\n');
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i];
+    if(!line.trim()) continue;
+    var cells=line.split('\t');
+    if(cells.length>=7){
+      var nm=cells[5].trim();
+      var val=cells.slice(6).join('\t').trim();
+      var low=nm.toLowerCase();
+      if(keep.indexOf(low)>=0 && val) out[low]=nm+'='+val;
+    }
+  }
+
+  // fallback: cookie string  key=value; key=value
+  if(Object.keys(out).length===0){
     var parts=raw.split(/[;\n]/);
-    for(var i=0;i<parts.length;i++){
-      var p=parts[i].trim();
+    for(var j=0;j<parts.length;j++){
+      var p=parts[j].trim();
       var eq=p.indexOf('=');
       if(eq<0) continue;
       var k=p.substring(0,eq).trim().toLowerCase();
-      if(keep.indexOf(k)>=0) out.push(p.substring(0,eq).trim()+'='+p.substring(eq+1).trim());
+      var v=p.substring(eq+1).trim();
+      if(keep.indexOf(k)>=0 && v) out[k]=p.substring(0,eq).trim()+'='+v;
     }
-    if(out.length) return out.join('; ');
   }
 
-  // format 2: chrome devtools table (tab separated)
-  var lines=raw.split(/\n/);
-  for(var j=0;j<lines.length;j++){
-    var line=lines[j];
-    if(!line.trim()) continue;
-    var cells=line.split('\t');
-    if(cells.length<6) continue;
-    var name=cells[5].trim();
-    var value=cells[6]?cells[6].trim():'';
-    if(!value && cells.length>6) value=cells.slice(6).join('\t').trim();
-    var low=name.toLowerCase();
-    if(keep.indexOf(low)>=0 && value) out.push(name+'='+value);
-  }
-  if(out.length) return out.join('; ');
-
-  // format 3: json
-  try{
-    var obj=JSON.parse(raw);
-    if(Array.isArray(obj)){
-      for(var m=0;m<obj.length;m++){
-        var c=obj[m];
-        if(c.name && c.value && keep.indexOf(c.name.toLowerCase())>=0) out.push(c.name+'='+c.value);
+  // fallback: json
+  if(Object.keys(out).length===0){
+    try{
+      var obj=JSON.parse(raw);
+      if(Array.isArray(obj)){
+        for(var m=0;m<obj.length;m++){
+          var c=obj[m];
+          if(c.name && c.value && keep.indexOf(c.name.toLowerCase())>=0)
+            out[c.name.toLowerCase()]=c.name+'='+c.value;
+        }
       }
-    }
-    if(out.length) return out.join('; ');
-  }catch(e){}
+    }catch(e){}
+  }
 
-  return '';
+  var arr=[];
+  if(out['netflixid']) arr.push(out['netflixid']);
+  if(out['securenetflixid']) arr.push(out['securenetflixid']);
+  if(out['nfvdid']) arr.push(out['nfvdid']);
+  return arr.join('; ');
 }
 
 async function checkSingleCookie(){
   var input=document.getElementById('singleCookieInput').value.trim();
   var resultBox=document.getElementById('singleCheckResult');
-  if(!input){resultBox.className='check-result invalid';resultBox.innerHTML='ENTER A COOKIE';return}
+  var normBox=document.getElementById('normalizedBox');
+
+  if(!input){resultBox.className='check-result invalid';resultBox.innerHTML='ENTER A COOKIE';normBox.style.display='none';return}
+
   var normalized=extractCookies(input);
-  if(!normalized){resultBox.className='check-result invalid';resultBox.innerHTML='NO NETFLIX COOKIE KEYS FOUND';playBeep(300);return}
+  if(!normalized){resultBox.className='check-result invalid';resultBox.innerHTML='NO NETFLIX COOKIE KEYS FOUND';normBox.style.display='none';playBeep(300);return}
+
+  normBox.style.display='block';
+  normBox.innerHTML='<strong>NORMALIZED:</strong><br>'+normalized;
 
   resultBox.className='check-result';
   resultBox.style.display='block';
@@ -205,7 +217,7 @@ function handleFileUpload(event){
   if(!file) return;
   var reader=new FileReader();
   reader.onload=async function(e){
-    var lines=e.target.result.split('\n').map(x=>x.trim()).filter(Boolean);
+    var lines=e.target.result.split('\n').map(function(x){return x.trim()}).filter(Boolean);
     var validityBox=document.getElementById('validityBox');
     validityBox.className='validity-box';
     validityBox.style.display='block';
