@@ -222,6 +222,58 @@ async function checkSingleCookie(){
   }
 }
 
+function splitIntoGroups(text){
+  // strategy: split by "blank line" or by a new "domain line" (usually starts with .netflix.com or netflix.com)
+  // then group lines that look like table rows into single groups
+  var lines=text.split('\n').map(function(l){return l.replace(/\r$/,'')});
+  var groups=[];
+  var cur=[];
+  var lastWasTable=false;
+
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i];
+    if(!line.trim()){
+      if(cur.length){groups.push(cur.join('\n'));cur=[]}
+      lastWasTable=false;
+      continue;
+    }
+    var cells=line.split('\t');
+    var isTable=cells.length>=7;
+
+    if(isTable){
+      // new domain row? check if domain cell looks like .netflix.com or netflix.com
+      var domain=cells[0].trim().toLowerCase();
+      var isNewDomain=(domain==='.netflix.com' || domain==='netflix.com' || domain.endsWith('.netflix.com'));
+      // if this is a new netflix cookie table start and previous lines are already a complete cookie
+      // we consider a table start when the 6th column looks like a real cookie name
+      var name=cells[5]?cells[5].trim().toLowerCase():'';
+      var isCookieName=(name==='netflixid'||name==='securenetflixid'||name==='nfvdid'||name==='netflixuserid'||name==='gsid'||name==='pas'||name==='optanonconsent'||name.indexOf('netflix')===0);
+
+      // if we already have a netflixid+securenetflixid in cur, and this looks like new cookie, flush
+      var curHasBoth=cur.some(function(x){
+        var cc=x.split('\t');
+        if(cc.length<6) return false;
+        var n=cc[5].toLowerCase();
+        return n==='netflixid'||n==='securenetflixid';
+      });
+
+      if(isCookieName && cur.length>0 && curHasBoth){
+        groups.push(cur.join('\n'));
+        cur=[];
+      }
+      cur.push(line);
+      lastWasTable=true;
+    }else{
+      // non-table line - could be cookie string, json, etc
+      if(cur.length){groups.push(cur.join('\n'));cur=[]}
+      groups.push(line);
+      lastWasTable=false;
+    }
+  }
+  if(cur.length) groups.push(cur.join('\n'));
+  return groups;
+}
+
 async function handleFileUpload(event){
   var file=event.target.files[0];
   if(!file){return}
@@ -260,18 +312,13 @@ async function handleFileUpload(event){
     return;
   }
 
-  var chunks=text.split(/\n\s*\n/);
-  if(chunks.length===1){
-    var lines=text.split('\n');
-    var hasTable=lines.some(function(l){return l.split('\t').length>=7});
-    if(!hasTable) chunks=lines.filter(function(l){return l.trim()});
-  }
+  var groups=splitIntoGroups(text);
 
   validCookies=[];
   invalidCookies=[];
 
-  for(var i=0;i<chunks.length;i++){
-    var norm=extractCookies(chunks[i]);
+  for(var g=0;g<groups.length;g++){
+    var norm=extractCookies(groups[g]);
     if(!norm) continue;
     var r=await validateCookie(norm);
     if(r.ok){
@@ -279,7 +326,7 @@ async function handleFileUpload(event){
     }else{
       invalidCookies.push({cookie:norm,error:r.error});
     }
-    loader.textContent='scanned '+(i+1)+'/'+chunks.length+'...';
+    loader.textContent='scanned '+(g+1)+'/'+groups.length+'...';
   }
 
   loader.classList.remove('on');
@@ -296,7 +343,7 @@ async function handleFileUpload(event){
   }else{
     validityBox.className='validity-box invalid';
     validityBox.style.display='block';
-    validityBox.innerHTML='0 LIVE COOKIES (scanned '+(validCookies.length+invalidCookies.length)+')';
+    validityBox.innerHTML='0 LIVE COOKIES (found '+(validCookies.length+invalidCookies.length)+' total)';
     playBeep(300);
   }
 
