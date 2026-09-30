@@ -43,12 +43,14 @@
   .action-btn.app-btn{background:#e50914;color:#fff;box-shadow:0 0 15px #e50914}
   .action-btn.bypass-btn{background:#ff0044;color:#fff;box-shadow:0 0 15px #ff0044;animation:pulseBypass 1.5s infinite}
   .action-btn.dl-btn{background:#00c8ff;color:#000;box-shadow:0 0 15px #00c8ff}
+  .action-btn.hist-btn{background:#9b59b6;color:#fff;box-shadow:0 0 15px #9b59b6}
   @keyframes pulseBypass{0%{box-shadow:0 0 10px #ff0044}50%{box-shadow:0 0 25px #ff0044,0 0 40px #ff0044}100%{box-shadow:0 0 10px #ff0044}}
   .cookie-box{border:2px solid #39ff14;border-radius:20px;padding:12px;margin-bottom:15px;font-size:13px}
   .cookie-count{color:#ffcc00;font-weight:bold}
   .token-display{margin-top:15px;font-size:12px;word-break:break-all;border:1px dashed #39ff14;padding:10px;border-radius:10px;display:none;background:rgba(57,255,20,0.05);color:#fff}
   .footer{margin-top:25px;font-size:11px;color:#39ff14;display:flex;flex-direction:column;gap:8px;align-items:center}
-  .made-by{font-size:13px;font-weight:bold;color:#000;background:#39ff14;padding:6px 15px;border-radius:20px;box-shadow:0 0 15px #39ff14;text-transform:uppercase;letter-spacing:2px}
+  .made-by{font-size:14px;font-weight:900;color:#000;background:linear-gradient(90deg,#39ff14,#ffcc00,#39ff14);padding:8px 20px;border-radius:20px;box-shadow:0 0 20px #39ff14,0 0 40px rgba(57,255,20,0.6);text-transform:uppercase;letter-spacing:3px;animation:glowText 2s infinite alternate}
+  @keyframes glowText{from{box-shadow:0 0 10px #39ff14,0 0 20px rgba(57,255,20,0.4)}to{box-shadow:0 0 25px #39ff14,0 0 50px rgba(57,255,20,0.9)}}
   .results{margin-top:18px;text-align:left;display:none}
   .result-section{margin-bottom:14px}
   .result-header{font-size:13px;font-weight:bold;padding:8px 10px;border-radius:10px 10px 0 0}
@@ -61,13 +63,22 @@
   .cookie-item .copy-btn{background:#39ff14;color:#000;border:none;padding:5px 12px;border-radius:8px;font-size:10px;font-weight:bold;cursor:pointer;margin-top:6px}
   .loader{display:none;text-align:center;padding:12px;font-size:12px;color:#ffcc00}
   .loader.on{display:block}
+  .history-panel{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:999;overflow-y:auto;padding:20px;text-align:left;box-sizing:border-box}
+  .history-panel.on{display:block}
+  .history-inner{max-width:480px;margin:0 auto;background:#0a0a0a;border:2px solid #39ff14;border-radius:20px;padding:20px;box-shadow:0 0 20px #39ff14}
+  .history-title{font-size:18px;color:#ffcc00;text-align:center;margin-bottom:14px}
+  .history-close{background:#ff0044;color:#fff;border:none;padding:10px;border-radius:12px;width:100%;font-weight:bold;cursor:pointer;margin-bottom:14px}
+  .history-item{border:1px solid #39ff14;border-radius:10px;padding:10px;margin-bottom:10px;font-size:11px}
+  .history-item .time{color:#ffcc00;font-weight:bold;display:block;margin-bottom:6px}
+  .history-item .counts{font-size:10px;color:#39ff14;margin-bottom:6px}
+  .history-empty{color:#888;text-align:center;padding:20px}
 </style>
 </head>
 <body>
 <div class="container">
   <div class="header">NETFLIX AUTO<br>BYPASS PANEL<span>WEB <span class="badge">AFTAB</span></span></div>
   <div class="status-line"><span class="dot">●</span> CORE: BYPASS // <span id="clock">00:00:00</span></div>
-  <div class="sub-status">&gt;_ AUTO-INJECT • 4K • ALL DEVICES</div>
+  <div class="sub-status">&gt;_ UNIVERSAL SCAN • 4K • ALL DEVICES</div>
 
   <div class="checker-box">
     <div class="section-title">SINGLE COOKIE CHECKER</div>
@@ -106,10 +117,19 @@
     <a href="nflx://www.netflix.com/" class="action-btn app-btn" id="appRedirectBtn">OPEN IN NETFLIX APP</a>
     <button class="action-btn dl-btn" onclick="downloadExtension()">DOWNLOAD BYPASS EXTENSION</button>
     <button class="action-btn bypass-btn" onclick="bypassAndOpen()">BYPASS &amp; OPEN NETFLIX</button>
+    <button class="action-btn hist-btn" onclick="openHistory()">VIEW HISTORY</button>
   </div>
 
   <div class="token-display" id="tokenDisplay"></div>
   <div class="footer"><div class="made-by">Made by Aftab</div></div>
+</div>
+
+<div class="history-panel" id="historyPanel">
+  <div class="history-inner">
+    <div class="history-title">SCAN HISTORY</div>
+    <button class="history-close" onclick="closeHistory()">CLOSE</button>
+    <div id="historyList"></div>
+  </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
@@ -134,26 +154,45 @@ function playBeep(freq){
   }catch(e){}
 }
 
+/* UNIVERSAL EXTRACTOR
+   Handles:
+   - chrome devtools table (tab-separated, 7+ cells)
+   - cookie string "key=value; key=value"
+   - "key=value" on separate lines
+   - json array of {name, value}
+   - json object {name: value}
+   - netscape cookie file (tab-separated, 7 fields, first may be #comment)
+*/
 function extractCookies(raw){
   if(!raw) return '';
   var keep=['netflixid','securenetflixid','nfvdid'];
   var out={};
+
+  // 1) try devtools table / netscape format (tab-separated)
   var lines=raw.split('\n');
   for(var i=0;i<lines.length;i++){
     var line=lines[i];
     if(!line.trim()) continue;
+    if(line.charAt(0)==='#' && line.charAt(1)===' ') continue;
     var cells=line.split('\t');
     if(cells.length>=7){
-      var nm=cells[5].trim();
-      var val=cells.slice(6).join('\t').trim();
-      var low=nm.toLowerCase();
-      if(keep.indexOf(low)>=0 && val) out[low]=nm+'='+val;
+      var name='';
+      var value='';
+      // netscape: domain \t flag \t path \t secure \t expiry \t name \t value
+      // devtools also same order
+      name=cells[5]?cells[5].trim():'';
+      value=cells.slice(6).join('\t').trim();
+      var low=name.toLowerCase();
+      if(keep.indexOf(low)>=0 && value) out[low]=name+'='+value;
     }
   }
+
+  // 2) cookie string "key=value; key=value" or "key=value" per line
   if(Object.keys(out).length===0){
     var parts=raw.split(/[;\n]/);
     for(var j=0;j<parts.length;j++){
       var p=parts[j].trim();
+      if(!p) continue;
       var eq=p.indexOf('=');
       if(eq<0) continue;
       var k=p.substring(0,eq).trim().toLowerCase();
@@ -161,18 +200,26 @@ function extractCookies(raw){
       if(keep.indexOf(k)>=0 && v) out[k]=p.substring(0,eq).trim()+'='+v;
     }
   }
+
+  // 3) json array / object
   if(Object.keys(out).length===0){
     try{
       var obj=JSON.parse(raw);
       if(Array.isArray(obj)){
         for(var m=0;m<obj.length;m++){
           var c=obj[m];
-          if(c.name && c.value && keep.indexOf(c.name.toLowerCase())>=0)
-            out[c.name.toLowerCase()]=c.name+'='+c.value;
+          if(c && c.name && c.value && keep.indexOf(String(c.name).toLowerCase())>=0)
+            out[String(c.name).toLowerCase()]=c.name+'='+c.value;
+        }
+      }else if(obj && typeof obj==='object'){
+        for(var key in obj){
+          var low2=key.toLowerCase();
+          if(keep.indexOf(low2)>=0 && obj[key]) out[low2]=key+'='+obj[key];
         }
       }
     }catch(e){}
   }
+
   var arr=[];
   if(out['netflixid']) arr.push(out['netflixid']);
   if(out['securenetflixid']) arr.push(out['securenetflixid']);
@@ -208,6 +255,7 @@ async function checkSingleCookie(){
   if(r.ok){
     lastValidCookie=normalized;
     validCookies=[{cookie:normalized,profile:r.profile}];
+    invalidCookies=[];
     resultBox.className='check-result valid';
     resultBox.innerHTML='LIVE COOKIE<br><span style="font-size:11px">profile: '+r.profile+'</span>';
     document.getElementById('actionButtons').style.display='flex';
@@ -215,62 +263,81 @@ async function checkSingleCookie(){
     document.getElementById('cookieStatus').textContent='LIVE - READY TO BREACH';
     playBeep(900);
     renderResults();
+    addHistory('single check',1,0);
   }else{
     resultBox.className='check-result invalid';
     resultBox.innerHTML='DEAD - '+r.error;
     playBeep(300);
+    addHistory('single check',0,1);
   }
 }
 
-function splitIntoGroups(text){
-  // strategy: split by "blank line" or by a new "domain line" (usually starts with .netflix.com or netflix.com)
-  // then group lines that look like table rows into single groups
+function universalSplit(text){
+  // step 1: try JSON parse whole text
+  var trimmed=text.trim();
+  if(trimmed.charAt(0)==='[' || trimmed.charAt(0)==='{'){
+    try{
+      var parsed=JSON.parse(trimmed);
+      if(Array.isArray(parsed)) return [trimmed];
+      if(typeof parsed==='object') return [trimmed];
+    }catch(e){}
+  }
+
+  // step 2: line-based grouping
   var lines=text.split('\n').map(function(l){return l.replace(/\r$/,'')});
   var groups=[];
   var cur=[];
-  var lastWasTable=false;
+  var mode=null; // 'table' or 'string'
+
+  function flush(){ if(cur.length){groups.push(cur.join('\n'));cur=[]} }
 
   for(var i=0;i<lines.length;i++){
     var line=lines[i];
     if(!line.trim()){
-      if(cur.length){groups.push(cur.join('\n'));cur=[]}
-      lastWasTable=false;
+      // blank line separates chunks in string mode
+      if(mode!=='table'){ flush(); }
       continue;
     }
+    if(line.charAt(0)==='#' && line.charAt(1)===' '){ continue; }
+
     var cells=line.split('\t');
     var isTable=cells.length>=7;
 
     if(isTable){
-      // new domain row? check if domain cell looks like .netflix.com or netflix.com
-      var domain=cells[0].trim().toLowerCase();
-      var isNewDomain=(domain==='.netflix.com' || domain==='netflix.com' || domain.endsWith('.netflix.com'));
-      // if this is a new netflix cookie table start and previous lines are already a complete cookie
-      // we consider a table start when the 6th column looks like a real cookie name
+      // is this a new netflix cookie row or a continuation line?
       var name=cells[5]?cells[5].trim().toLowerCase():'';
-      var isCookieName=(name==='netflixid'||name==='securenetflixid'||name==='nfvdid'||name==='netflixuserid'||name==='gsid'||name==='pas'||name==='optanonconsent'||name.indexOf('netflix')===0);
-
-      // if we already have a netflixid+securenetflixid in cur, and this looks like new cookie, flush
-      var curHasBoth=cur.some(function(x){
+      var isKnown=name && (name==='netflixid'||name==='securenetflixid'||name==='nfvdid'||name==='netflixuserid'||name.indexOf('netflix')===0||name==='gsid'||name==='pas'||name==='optanonconsent'||name==='profilesnewsession');
+      if(mode==='string'){ flush(); }
+      if(mode!=='table'){
+        mode='table';
+      }
+      // if the current group already has both netflixid and securenetflixid, and this is known new cookie -> flush
+      var hasBoth=cur.some(function(x){
         var cc=x.split('\t');
         if(cc.length<6) return false;
-        var n=cc[5].toLowerCase();
+        var n=cc[5]?cc[5].trim().toLowerCase():'';
         return n==='netflixid'||n==='securenetflixid';
       });
-
-      if(isCookieName && cur.length>0 && curHasBoth){
-        groups.push(cur.join('\n'));
-        cur=[];
+      if(hasBoth && isKnown){
+        flush();
       }
       cur.push(line);
-      lastWasTable=true;
     }else{
-      // non-table line - could be cookie string, json, etc
-      if(cur.length){groups.push(cur.join('\n'));cur=[]}
-      groups.push(line);
-      lastWasTable=false;
+      // string mode
+      if(mode==='table'){ flush(); }
+      mode='string';
+      // if this line looks like a new "cookie string", treat as its own chunk
+      // heuristic: if it contains "NetflixId=" or "SecureNetflixId=" or "nfvdid="
+      var lower=line.toLowerCase();
+      if(lower.indexOf('netflixid=')>=0 || lower.indexOf('securenetflixid=')>=0 || lower.indexOf('nfvdid=')>=0){
+        cur.push(line);
+        // keep collecting until next blank or new cookie start
+      }else{
+        cur.push(line);
+      }
     }
   }
-  if(cur.length) groups.push(cur.join('\n'));
+  flush();
   return groups;
 }
 
@@ -297,7 +364,7 @@ async function handleFileUpload(event){
       for(var p=1;p<=pdf.numPages;p++){
         var page=await pdf.getPage(p);
         var content=await page.getTextContent();
-        var pageText=content.items.map(function(it){return it.str}).join(' ');
+        var pageText=content.items.map(function(it){return it.str}).join('\n');
         full+=pageText+'\n';
       }
       text=full;
@@ -312,7 +379,7 @@ async function handleFileUpload(event){
     return;
   }
 
-  var groups=splitIntoGroups(text);
+  var groups=universalSplit(text);
 
   validCookies=[];
   invalidCookies=[];
@@ -348,6 +415,7 @@ async function handleFileUpload(event){
   }
 
   renderResults();
+  addHistory(file.name,validCookies.length,invalidCookies.length);
 }
 
 function renderResults(){
@@ -444,6 +512,36 @@ function bypassAndOpen(){
       td.innerHTML='cookie ready<br><br><code style="font-size:10px;word-break:break-all">'+lastValidCookie+'</code>';
     });
   }
+}
+
+/* HISTORY */
+function getHistory(){
+  try{ return JSON.parse(localStorage.getItem('nf_scan_history')||'[]'); }catch(e){ return []; }
+}
+function saveHistory(h){
+  try{ localStorage.setItem('nf_scan_history',JSON.stringify(h.slice(0,50))); }catch(e){}
+}
+function addHistory(source,valid,invalid){
+  var h=getHistory();
+  h.unshift({time:new Date().toLocaleString(),source:source,valid:valid,invalid:invalid});
+  saveHistory(h);
+}
+function openHistory(){
+  var list=document.getElementById('historyList');
+  var h=getHistory();
+  if(h.length===0){
+    list.innerHTML='<div class="history-empty">no history yet</div>';
+  }else{
+    var html='';
+    for(var i=0;i<h.length;i++){
+      html+='<div class="history-item"><span class="time">'+h[i].time+'</span><span class="counts">source: '+h[i].source+'<br>valid: '+h[i].valid+' | invalid: '+h[i].invalid+'</span></div>';
+    }
+    list.innerHTML=html;
+  }
+  document.getElementById('historyPanel').classList.add('on');
+}
+function closeHistory(){
+  document.getElementById('historyPanel').classList.remove('on');
 }
 
 if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'}
