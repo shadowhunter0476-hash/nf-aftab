@@ -1,193 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>NETFLIX AUTO BYPASS — AFTAB</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NETFLIX BYPASS — AFTAB</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
-  *{margin:0;padding:0;box-sizing:border-box;font-family:'Share Tech Mono',monospace}
-  body{background:#000;color:#39ff14;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
-  .container{background:#0a0a0a;border:3px solid #39ff14;border-radius:30px;padding:30px 20px;width:100%;max-width:440px;box-shadow:0 0 20px #39ff14,inset 0 0 20px rgba(57,255,20,0.2);text-align:center}
-  .header{font-size:24px;font-weight:bold;line-height:1.2;margin-bottom:20px;text-shadow:0 0 10px #39ff14}
-  .header span{display:block;font-size:16px;margin-top:5px}
-  .badge{background:#39ff14;color:#000;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:bold;display:inline-block;margin-top:5px;box-shadow:0 0 10px #39ff14}
-  .status-line{font-size:12px;margin:15px 0}
-  .dot{color:#39ff14;font-size:18px;animation:blink 1s infinite}
-  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
-  .sub-status{font-size:11px;border-bottom:1px solid #39ff14;padding-bottom:10px;margin-bottom:20px}
-  .section-title{font-size:14px;font-weight:bold;color:#ffcc00;margin-bottom:10px;text-align:left;border-left:4px solid #ffcc00;padding-left:8px}
-  .checker-box{border:2px solid #ffcc00;border-radius:15px;padding:15px;margin-bottom:20px;background:rgba(255,204,0,0.05)}
-  .checker-box textarea{width:100%;height:80px;background:#000;border:1px solid #39ff14;border-radius:10px;color:#39ff14;padding:10px;font-size:12px;resize:none;outline:none;font-family:'Share Tech Mono',monospace;box-sizing:border-box}
-  .checker-box textarea::placeholder{color:rgba(57,255,20,0.4)}
-  .check-btn{background:#ffcc00;color:#000;border:none;border-radius:12px;padding:12px;width:100%;font-size:14px;font-weight:bold;cursor:pointer;margin-top:10px;box-shadow:0 0 10px #ffcc00}
-  .check-btn:hover{transform:scale(1.02);box-shadow:0 0 20px #ffcc00}
-  .check-result{margin-top:10px;font-size:13px;font-weight:bold;padding:8px;border-radius:10px;display:none}
-  .check-result.valid{display:block;background:rgba(57,255,20,0.15);border:1px solid #39ff14;color:#39ff14}
-  .check-result.invalid{display:block;background:rgba(255,0,0,0.15);border:1px solid #ff0000;color:#ff0000}
-  .upload-btn-wrapper{position:relative;overflow:hidden;display:inline-block;width:100%;margin-bottom:15px}
-  .upload-btn{border:2px dashed #39ff14;color:#39ff14;background:transparent;padding:12px 20px;border-radius:15px;font-size:13px;font-weight:bold;width:100%;cursor:pointer}
-  .upload-btn:hover{background-color:rgba(57,255,20,0.1);box-shadow:0 0 15px #39ff14}
-  .upload-btn-wrapper input[type=file]{position:absolute;left:0;top:0;opacity:0;cursor:pointer;height:100%;width:100%}
-  .validity-box{margin-bottom:15px;font-size:12px;padding:8px;border-radius:10px;display:none}
-  .validity-box.valid{display:block;background:rgba(57,255,20,0.1);border:1px solid #39ff14;color:#39ff14}
-  .validity-box.invalid{display:block;background:rgba(255,0,0,0.1);border:1px solid #ff0000;color:#ff0000}
-  .platforms{display:flex;justify-content:center;gap:10px;margin-bottom:20px}
-  .platform-btn{border:2px solid #39ff14;border-radius:15px;padding:12px 8px;width:80px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;background:transparent;color:#39ff14;font-size:10px;font-weight:bold}
-  .platform-btn.active{background:#39ff14;color:#000;box-shadow:0 0 15px #39ff14}
-  .platform-btn svg{width:20px;height:20px;fill:currentColor}
-  .generate-btn{background:#39ff14;color:#000;border:none;border-radius:50px;padding:16px;width:100%;font-size:16px;font-weight:bold;cursor:pointer;box-shadow:0 0 20px #39ff14}
-  .generate-btn:hover{transform:scale(1.02)}
-  .action-buttons{display:none;flex-direction:column;gap:10px;margin-top:15px}
-  .action-btn{padding:14px;border-radius:15px;border:none;font-weight:bold;cursor:pointer;font-size:13px;text-decoration:none;text-align:center;width:100%}
-  .action-btn.app-btn{background:#e50914;color:#fff;box-shadow:0 0 15px #e50914}
-  .action-btn.bypass-btn{background:#ff0044;color:#fff;box-shadow:0 0 15px #ff0044;animation:pulseBypass 1.5s infinite}
-  .action-btn.dl-btn{background:#00c8ff;color:#000;box-shadow:0 0 15px #00c8ff}
-  .action-btn.hist-btn{background:#9b59b6;color:#fff;box-shadow:0 0 15px #9b59b6}
-  @keyframes pulseBypass{0%{box-shadow:0 0 10px #ff0044}50%{box-shadow:0 0 25px #ff0044,0 0 40px #ff0044}100%{box-shadow:0 0 10px #ff0044}}
-  .cookie-box{border:2px solid #39ff14;border-radius:20px;padding:12px;margin-bottom:15px;font-size:13px}
-  .cookie-count{color:#ffcc00;font-weight:bold}
-  .token-display{margin-top:15px;font-size:12px;word-break:break-all;border:1px dashed #39ff14;padding:10px;border-radius:10px;display:none;background:rgba(57,255,20,0.05);color:#fff}
-  .footer{margin-top:25px;font-size:11px;color:#39ff14;display:flex;flex-direction:column;gap:8px;align-items:center}
-  .made-by{font-size:14px;font-weight:900;color:#000;background:linear-gradient(90deg,#39ff14,#ffcc00,#39ff14);padding:8px 20px;border-radius:20px;box-shadow:0 0 20px #39ff14,0 0 40px rgba(57,255,20,0.6);text-transform:uppercase;letter-spacing:3px;animation:glowText 2s infinite alternate}
-  @keyframes glowText{from{box-shadow:0 0 10px #39ff14,0 0 20px rgba(57,255,20,0.4)}to{box-shadow:0 0 25px #39ff14,0 0 50px rgba(57,255,20,0.9)}}
-  .results{margin-top:18px;text-align:left;display:none}
-  .result-section{margin-bottom:14px}
-  .result-header{font-size:13px;font-weight:bold;padding:8px 10px;border-radius:10px 10px 0 0}
-  .result-header.valid{background:rgba(57,255,20,0.2);border:1px solid #39ff14;color:#39ff14}
-  .result-header.invalid{background:rgba(255,0,0,0.2);border:1px solid #ff0000;color:#ff0000}
-  .cookie-item{background:#000;border:1px solid #39ff14;padding:10px;font-size:10px;word-break:break-all;color:#39ff14}
-  .cookie-item.invalid{border-color:#ff0000;color:#ff8888}
-  .cookie-item .num{color:#ffcc00;font-weight:bold;font-size:11px;display:block;margin-bottom:4px}
-  .cookie-item .data{max-height:60px;overflow-y:auto;display:block;line-height:1.4}
-  .cookie-item .copy-btn{background:#39ff14;color:#000;border:none;padding:5px 12px;border-radius:8px;font-size:10px;font-weight:bold;cursor:pointer;margin-top:6px}
-  .loader{display:none;text-align:center;padding:12px;font-size:12px;color:#ffcc00}
-  .loader.on{display:block}
-  .history-panel{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:999;overflow-y:auto;padding:20px;text-align:left;box-sizing:border-box}
-  .history-panel.on{display:block}
-  .history-inner{max-width:480px;margin:0 auto;background:#0a0a0a;border:2px solid #39ff14;border-radius:20px;padding:20px;box-shadow:0 0 20px #39ff14}
-  .history-title{font-size:18px;color:#ffcc00;text-align:center;margin-bottom:14px}
-  .history-close{background:#ff0044;color:#fff;border:none;padding:10px;border-radius:12px;width:100%;font-weight:bold;cursor:pointer;margin-bottom:14px}
-  .history-item{border:1px solid #39ff14;border-radius:10px;padding:10px;margin-bottom:10px;font-size:11px}
-  .history-item .time{color:#ffcc00;font-weight:bold;display:block;margin-bottom:6px}
-  .history-item .counts{font-size:10px;color:#39ff14;margin-bottom:6px}
-  .history-empty{color:#888;text-align:center;padding:20px}
+body{background:#000;color:#39ff14;font-family:monospace;padding:20px;margin:0;min-height:100vh}
+.box{max-width:440px;margin:0 auto;background:#0a0a0a;border:3px solid #39ff14;border-radius:30px;padding:25px 18px;box-shadow:0 0 20px #39ff14}
+h1{font-size:22px;text-align:center;margin:0 0 5px 0;text-shadow:0 0 10px #39ff14}
+.badge{display:inline-block;background:#39ff14;color:#000;padding:3px 12px;border-radius:20px;font-size:12px;font-weight:bold}
+.center{text-align:center}
+.sub{font-size:11px;text-align:center;margin:10px 0;border-bottom:1px solid #39ff14;padding-bottom:10px}
+.card{border:2px solid #ffcc00;border-radius:15px;padding:15px;margin:15px 0;background:rgba(255,204,0,0.05)}
+.card h2{font-size:14px;color:#ffcc00;margin:0 0 10px 0}
+textarea{width:100%;height:80px;background:#000;border:1px solid #39ff14;border-radius:10px;color:#39ff14;padding:10px;font-size:12px;box-sizing:border-box;font-family:monospace}
+button{background:#ffcc00;color:#000;border:none;border-radius:12px;padding:12px;width:100%;font-size:14px;font-weight:bold;cursor:pointer;margin-top:10px;font-family:monospace}
+button.green{background:#39ff14;box-shadow:0 0 15px #39ff14}
+button.red{background:#ff0044;color:#fff}
+button.blue{background:#00c8ff;color:#000}
+button.purple{background:#9b59b6;color:#fff}
+.info{border:2px solid #39ff14;border-radius:15px;padding:12px;margin:12px 0;font-size:13px;text-align:center}
+#status{margin-top:10px;font-size:13px;font-weight:bold;padding:8px;border-radius:10px;display:none;text-align:center}
+.ok{display:block;background:rgba(57,255,20,0.15);border:1px solid #39ff14;color:#39ff14}
+.bad{display:block;background:rgba(255,0,0,0.15);border:1px solid #ff0000;color:#ff0000}
+.upload-wrap{position:relative;overflow:hidden;display:inline-block;width:100%;margin-bottom:10px}
+.upload-wrap input{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;cursor:pointer}
+.result-item{background:#000;border:1px solid #39ff14;border-radius:8px;padding:8px;margin-bottom:6px;font-size:10px;word-break:break-all}
+.result-item.invalid{border-color:#ff0000;color:#ff8888}
+.result-item .head{font-size:11px;color:#ffcc00;font-weight:bold;display:block;margin-bottom:4px}
+.copy-btn{background:#39ff14;color:#000;border:none;padding:4px 10px;border-radius:6px;font-size:10px;font-weight:bold;margin-top:5px;cursor:pointer}
+.results{margin-top:15px;text-align:left}
+.made-by{text-align:center;margin-top:20px;font-size:14px;font-weight:900;color:#000;background:#39ff14;padding:8px 20px;border-radius:20px;letter-spacing:2px;display:inline-block;box-shadow:0 0 20px #39ff14}
+.history-modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:999;overflow-y:auto;padding:20px;box-sizing:border-box}
+.history-modal.on{display:block}
+.history-inner{max-width:440px;margin:20px auto;background:#0a0a0a;border:2px solid #39ff14;border-radius:20px;padding:20px}
+.history-title{color:#ffcc00;font-size:16px;text-align:center;margin-bottom:12px}
+.history-item{border:1px solid #39ff14;border-radius:8px;padding:8px;margin-bottom:8px;font-size:11px}
+.history-item .time{color:#ffcc00;display:block;margin-bottom:4px}
+.loader{display:none;text-align:center;padding:10px;font-size:12px;color:#ffcc00}
+.loader.on{display:block}
 </style>
 </head>
 <body>
-<div class="container">
-  <div class="header">NETFLIX AUTO<br>BYPASS PANEL<span>WEB <span class="badge">AFTAB</span></span></div>
-  <div class="status-line"><span class="dot">●</span> CORE: BYPASS // <span id="clock">00:00:00</span></div>
-  <div class="sub-status">&gt;_ UNIVERSAL SCAN • 4K • ALL DEVICES</div>
+<div class="box">
+  <div class="center">
+    <h1>NETFLIX BYPASS PANEL</h1>
+    <span class="badge">AFTAB</span>
+  </div>
+  <div class="sub" id="clock">CORE: BYPASS</div>
 
-  <div class="checker-box">
-    <div class="section-title">SINGLE COOKIE CHECKER</div>
-    <textarea id="singleCookieInput" placeholder="paste netflix cookie here (any format)"></textarea>
-    <button class="check-btn" onclick="checkSingleCookie()">CHECK COOKIE</button>
-    <div class="check-result" id="singleCheckResult"></div>
+  <div class="card">
+    <h2>SINGLE COOKIE CHECKER</h2>
+    <textarea id="singleInput" placeholder="paste netflix cookie here (any format)"></textarea>
+    <button onclick="checkSingle()">CHECK COOKIE</button>
+    <div id="status"></div>
   </div>
 
-  <div class="cookie-box">
-    <div>ACTIVE PREMIUM COOKIES: <span class="cookie-count" id="cookieCount">0</span> |</div>
-    <div style="color:#39ff14;font-weight:bold" id="cookieStatus">READY TO BREACH</div>
+  <div class="info">ACTIVE COOKIES: <b id="validCount">0</b></div>
+
+  <div class="upload-wrap">
+    <button>UPLOAD FILE (.txt / .json / .pdf)</button>
+    <input type="file" id="fileInput" accept=".txt,.json,.pdf" onchange="uploadFile(event)">
   </div>
 
-  <div class="upload-btn-wrapper">
-    <button class="upload-btn">UPLOAD COOKIE FILE (.txt / .json / .pdf)</button>
-    <input type="file" id="cookieFileInput" accept=".txt,.json,.pdf,text/plain,application/pdf,application/json" onchange="handleFileUpload(event)" />
-  </div>
-  <div class="validity-box" id="validityBox"></div>
-
-  <div class="loader" id="loader">scanning... please wait</div>
-
+  <div class="loader" id="loader">scanning...</div>
   <div class="results" id="results"></div>
 
-  <div class="platforms">
-    <button class="platform-btn active" data-p="mobile" onclick="selectPlatform(this)">
-      <svg viewBox="0 0 24 24"><path d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></svg>MOBILE</button>
-    <button class="platform-btn" data-p="pc" onclick="selectPlatform(this)">
-      <svg viewBox="0 0 24 24"><path d="M21 2H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h7v2H8v2h8v-2h-2v-2h7c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H3V4h18v12z"/></svg>PC</button>
-    <button class="platform-btn" data-p="tv" onclick="selectPlatform(this)">
-      <svg viewBox="0 0 24 24"><path d="M21 3H3c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h5v2h8v-2h5c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 14H3V5h18v12z"/></svg>4K TV</button>
-  </div>
+  <button class="green" onclick="downloadExt()">DOWNLOAD BYPASS EXTENSION</button>
+  <button class="red" onclick="bypassNow()">BYPASS &amp; OPEN NETFLIX</button>
+  <button class="purple" onclick="showHistory()">VIEW HISTORY</button>
 
-  <button class="generate-btn" onclick="generateToken()">GENERATE TOKEN</button>
-
-  <div class="action-buttons" id="actionButtons">
-    <a href="nflx://www.netflix.com/" class="action-btn app-btn" id="appRedirectBtn">OPEN IN NETFLIX APP</a>
-    <button class="action-btn dl-btn" onclick="downloadExtension()">DOWNLOAD BYPASS EXTENSION</button>
-    <button class="action-btn bypass-btn" onclick="bypassAndOpen()">BYPASS &amp; OPEN NETFLIX</button>
-    <button class="action-btn hist-btn" onclick="openHistory()">VIEW HISTORY</button>
-  </div>
-
-  <div class="token-display" id="tokenDisplay"></div>
-  <div class="footer"><div class="made-by">Made by Aftab</div></div>
+  <div class="center" style="margin-top:20px"><div class="made-by">Made by Aftab</div></div>
 </div>
 
-<div class="history-panel" id="historyPanel">
+<div class="history-modal" id="historyModal">
   <div class="history-inner">
     <div class="history-title">SCAN HISTORY</div>
-    <button class="history-close" onclick="closeHistory()">CLOSE</button>
-    <div id="historyList"></div>
+    <button class="red" onclick="hideHistory()">CLOSE</button>
+    <div id="historyList" style="margin-top:12px"></div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-var selectedPlatform='mobile';
-var lastValidCookie='';
 var validCookies=[];
 var invalidCookies=[];
+var lastValidCookie='';
 
-function updateClock(){document.getElementById('clock').textContent=new Date().toLocaleTimeString('en-US',{hour12:false})}
-setInterval(updateClock,1000);updateClock();
-
-function selectPlatform(btn){var all=document.querySelectorAll('.platform-btn');for(var i=0;i<all.length;i++)all[i].classList.remove('active');btn.classList.add('active');selectedPlatform=btn.dataset.p}
-
-function playBeep(freq){
-  try{
-    var ctx=new (window.AudioContext||window.webkitAudioContext)();
-    var o=ctx.createOscillator();
-    o.type='sine';o.frequency.setValueAtTime(freq,ctx.currentTime);
-    o.connect(ctx.destination);o.start();o.stop(ctx.currentTime+0.1);
-  }catch(e){}
+function setClock(){
+  document.getElementById('clock').textContent='CORE: BYPASS // '+new Date().toLocaleTimeString('en-US',{hour12:false});
 }
+setInterval(setClock,1000);setClock();
 
-/* UNIVERSAL EXTRACTOR
-   Handles:
-   - chrome devtools table (tab-separated, 7+ cells)
-   - cookie string "key=value; key=value"
-   - "key=value" on separate lines
-   - json array of {name, value}
-   - json object {name: value}
-   - netscape cookie file (tab-separated, 7 fields, first may be #comment)
-*/
-function extractCookies(raw){
+function extract(raw){
   if(!raw) return '';
   var keep=['netflixid','securenetflixid','nfvdid'];
   var out={};
-
-  // 1) try devtools table / netscape format (tab-separated)
   var lines=raw.split('\n');
   for(var i=0;i<lines.length;i++){
     var line=lines[i];
     if(!line.trim()) continue;
-    if(line.charAt(0)==='#' && line.charAt(1)===' ') continue;
+    if(line.charAt(0)==='#') continue;
     var cells=line.split('\t');
     if(cells.length>=7){
-      var name='';
-      var value='';
-      // netscape: domain \t flag \t path \t secure \t expiry \t name \t value
-      // devtools also same order
-      name=cells[5]?cells[5].trim():'';
-      value=cells.slice(6).join('\t').trim();
-      var low=name.toLowerCase();
-      if(keep.indexOf(low)>=0 && value) out[low]=name+'='+value;
+      var nm=cells[5]?cells[5].trim():'';
+      var val=cells.slice(6).join('\t').trim();
+      var low=nm.toLowerCase();
+      if(keep.indexOf(low)>=0 && val) out[low]=nm+'='+val;
     }
   }
-
-  // 2) cookie string "key=value; key=value" or "key=value" per line
   if(Object.keys(out).length===0){
     var parts=raw.split(/[;\n]/);
     for(var j=0;j<parts.length;j++){
@@ -200,26 +122,22 @@ function extractCookies(raw){
       if(keep.indexOf(k)>=0 && v) out[k]=p.substring(0,eq).trim()+'='+v;
     }
   }
-
-  // 3) json array / object
   if(Object.keys(out).length===0){
     try{
       var obj=JSON.parse(raw);
       if(Array.isArray(obj)){
         for(var m=0;m<obj.length;m++){
           var c=obj[m];
-          if(c && c.name && c.value && keep.indexOf(String(c.name).toLowerCase())>=0)
+          if(c&&c.name&&c.value&&keep.indexOf(String(c.name).toLowerCase())>=0)
             out[String(c.name).toLowerCase()]=c.name+'='+c.value;
         }
-      }else if(obj && typeof obj==='object'){
+      }else if(obj&&typeof obj==='object'){
         for(var key in obj){
-          var low2=key.toLowerCase();
-          if(keep.indexOf(low2)>=0 && obj[key]) out[low2]=key+'='+obj[key];
+          if(keep.indexOf(key.toLowerCase())>=0 && obj[key]) out[key.toLowerCase()]=key+'='+obj[key];
         }
       }
     }catch(e){}
   }
-
   var arr=[];
   if(out['netflixid']) arr.push(out['netflixid']);
   if(out['securenetflixid']) arr.push(out['securenetflixid']);
@@ -227,135 +145,76 @@ function extractCookies(raw){
   return arr.join('; ');
 }
 
-async function validateCookie(normalized){
-  try{
-    var res=await fetch('/api/validate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cookie:normalized,device:selectedPlatform})});
-    var data=await res.json();
-    return data.ok?{ok:true,profile:data.profile||'unknown'}:{ok:false,error:data.error||'rejected'};
-  }catch(e){
-    return {ok:false,error:e.message};
+function splitGroups(text){
+  // try json whole
+  var t=text.trim();
+  if(t.charAt(0)==='[' || t.charAt(0)==='{'){
+    try{ JSON.parse(t); return [t]; }catch(e){}
   }
-}
-
-async function checkSingleCookie(){
-  var input=document.getElementById('singleCookieInput').value.trim();
-  var resultBox=document.getElementById('singleCheckResult');
-  if(!input){resultBox.className='check-result invalid';resultBox.innerHTML='ENTER A COOKIE';return}
-  var normalized=extractCookies(input);
-  if(!normalized){resultBox.className='check-result invalid';resultBox.innerHTML='NO NETFLIX COOKIE KEYS FOUND';playBeep(300);return}
-
-  resultBox.className='check-result';
-  resultBox.style.display='block';
-  resultBox.style.background='rgba(255,204,0,0.1)';
-  resultBox.style.border='1px solid #ffcc00';
-  resultBox.style.color='#ffcc00';
-  resultBox.textContent='checking on netflix server...';
-
-  var r=await validateCookie(normalized);
-  if(r.ok){
-    lastValidCookie=normalized;
-    validCookies=[{cookie:normalized,profile:r.profile}];
-    invalidCookies=[];
-    resultBox.className='check-result valid';
-    resultBox.innerHTML='LIVE COOKIE<br><span style="font-size:11px">profile: '+r.profile+'</span>';
-    document.getElementById('actionButtons').style.display='flex';
-    document.getElementById('cookieCount').textContent='1';
-    document.getElementById('cookieStatus').textContent='LIVE - READY TO BREACH';
-    playBeep(900);
-    renderResults();
-    addHistory('single check',1,0);
-  }else{
-    resultBox.className='check-result invalid';
-    resultBox.innerHTML='DEAD - '+r.error;
-    playBeep(300);
-    addHistory('single check',0,1);
-  }
-}
-
-function universalSplit(text){
-  // step 1: try JSON parse whole text
-  var trimmed=text.trim();
-  if(trimmed.charAt(0)==='[' || trimmed.charAt(0)==='{'){
-    try{
-      var parsed=JSON.parse(trimmed);
-      if(Array.isArray(parsed)) return [trimmed];
-      if(typeof parsed==='object') return [trimmed];
-    }catch(e){}
-  }
-
-  // step 2: line-based grouping
   var lines=text.split('\n').map(function(l){return l.replace(/\r$/,'')});
-  var groups=[];
-  var cur=[];
-  var mode=null; // 'table' or 'string'
-
+  var groups=[],cur=[],mode=null;
   function flush(){ if(cur.length){groups.push(cur.join('\n'));cur=[]} }
-
   for(var i=0;i<lines.length;i++){
     var line=lines[i];
-    if(!line.trim()){
-      // blank line separates chunks in string mode
-      if(mode!=='table'){ flush(); }
-      continue;
-    }
-    if(line.charAt(0)==='#' && line.charAt(1)===' '){ continue; }
-
+    if(!line.trim()){ if(mode!=='table') flush(); continue; }
+    if(line.charAt(0)==='#'&&line.charAt(1)===' ') continue;
     var cells=line.split('\t');
-    var isTable=cells.length>=7;
-
-    if(isTable){
-      // is this a new netflix cookie row or a continuation line?
+    if(cells.length>=7){
       var name=cells[5]?cells[5].trim().toLowerCase():'';
-      var isKnown=name && (name==='netflixid'||name==='securenetflixid'||name==='nfvdid'||name==='netflixuserid'||name.indexOf('netflix')===0||name==='gsid'||name==='pas'||name==='optanonconsent'||name==='profilesnewsession');
+      var known=name&&(name==='netflixid'||name==='securenetflixid'||name==='nfvdid'||name.indexOf('netflix')===0);
       if(mode==='string'){ flush(); }
-      if(mode!=='table'){
-        mode='table';
-      }
-      // if the current group already has both netflixid and securenetflixid, and this is known new cookie -> flush
-      var hasBoth=cur.some(function(x){
-        var cc=x.split('\t');
-        if(cc.length<6) return false;
-        var n=cc[5]?cc[5].trim().toLowerCase():'';
-        return n==='netflixid'||n==='securenetflixid';
-      });
-      if(hasBoth && isKnown){
-        flush();
-      }
+      mode='table';
+      var hasBoth=cur.some(function(x){var cc=x.split('\t');if(cc.length<6)return false;var n=cc[5].toLowerCase();return n==='netflixid'||n==='securenetflixid'});
+      if(hasBoth&&known){ flush(); }
       cur.push(line);
     }else{
-      // string mode
       if(mode==='table'){ flush(); }
       mode='string';
-      // if this line looks like a new "cookie string", treat as its own chunk
-      // heuristic: if it contains "NetflixId=" or "SecureNetflixId=" or "nfvdid="
-      var lower=line.toLowerCase();
-      if(lower.indexOf('netflixid=')>=0 || lower.indexOf('securenetflixid=')>=0 || lower.indexOf('nfvdid=')>=0){
-        cur.push(line);
-        // keep collecting until next blank or new cookie start
-      }else{
-        cur.push(line);
-      }
+      cur.push(line);
     }
   }
   flush();
   return groups;
 }
 
-async function handleFileUpload(event){
-  var file=event.target.files[0];
-  if(!file){return}
-  var validityBox=document.getElementById('validityBox');
-  var loader=document.getElementById('loader');
-  var results=document.getElementById('results');
+async function validate(cookie){
+  try{
+    var res=await fetch('/api/validate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cookie:cookie,device:'mobile'})});
+    var data=await res.json();
+    return data.ok?{ok:true,profile:data.profile||'?'}:{ok:false,error:data.error||'?'};
+  }catch(e){ return {ok:false,error:e.message} }
+}
 
+async function checkSingle(){
+  var input=document.getElementById('singleInput').value.trim();
+  var status=document.getElementById('status');
+  if(!input){status.className='bad';status.textContent='enter cookie';return}
+  var norm=extract(input);
+  if(!norm){status.className='bad';status.textContent='no netflix keys found';return}
+  status.className='';status.style.display='block';status.style.background='rgba(255,204,0,0.1)';status.style.border='1px solid #ffcc00';status.style.color='#ffcc00';status.textContent='checking...';
+  var r=await validate(norm);
+  if(r.ok){
+    lastValidCookie=norm;
+    validCookies=[{cookie:norm,profile:r.profile}];
+    invalidCookies=[];
+    status.className='ok';status.textContent='LIVE — '+r.profile;
+    document.getElementById('validCount').textContent='1';
+    renderResults();
+    addHistory('single',1,0);
+  }else{
+    status.className='bad';status.textContent='DEAD — '+r.error;
+    addHistory('single',0,1);
+  }
+}
+
+async function uploadFile(event){
+  var file=event.target.files[0];
+  if(!file) return;
+  var loader=document.getElementById('loader');
   loader.classList.add('on');
   loader.textContent='reading file...';
-  validityBox.className='validity-box';
-  validityBox.style.display='none';
-  results.style.display='none';
-
+  document.getElementById('results').style.display='none';
   var text='';
-
   try{
     if(file.name.toLowerCase().endsWith('.pdf')){
       var buf=await file.arrayBuffer();
@@ -363,9 +222,8 @@ async function handleFileUpload(event){
       var full='';
       for(var p=1;p<=pdf.numPages;p++){
         var page=await pdf.getPage(p);
-        var content=await page.getTextContent();
-        var pageText=content.items.map(function(it){return it.str}).join('\n');
-        full+=pageText+'\n';
+        var c=await page.getTextContent();
+        full+=c.items.map(function(it){return it.str}).join('\n')+'\n';
       }
       text=full;
     }else{
@@ -373,178 +231,87 @@ async function handleFileUpload(event){
     }
   }catch(e){
     loader.classList.remove('on');
-    validityBox.className='validity-box invalid';
-    validityBox.style.display='block';
-    validityBox.innerHTML='file read error: '+e.message;
+    alert('file error: '+e.message);
     return;
   }
-
-  var groups=universalSplit(text);
-
-  validCookies=[];
-  invalidCookies=[];
-
+  var groups=splitGroups(text);
+  validCookies=[];invalidCookies=[];
   for(var g=0;g<groups.length;g++){
-    var norm=extractCookies(groups[g]);
+    var norm=extract(groups[g]);
     if(!norm) continue;
-    var r=await validateCookie(norm);
-    if(r.ok){
-      validCookies.push({cookie:norm,profile:r.profile});
-    }else{
-      invalidCookies.push({cookie:norm,error:r.error});
-    }
-    loader.textContent='scanned '+(g+1)+'/'+groups.length+'...';
+    var r=await validate(norm);
+    if(r.ok) validCookies.push({cookie:norm,profile:r.profile});
+    else invalidCookies.push({cookie:norm,error:r.error});
+    loader.textContent='scanned '+(g+1)+'/'+groups.length;
   }
-
   loader.classList.remove('on');
-  document.getElementById('cookieCount').textContent=validCookies.length;
-  document.getElementById('cookieStatus').textContent=validCookies.length>0?'LIVE - READY TO BREACH':'NO LIVE COOKIES';
-
-  if(validCookies.length>0){
-    lastValidCookie=validCookies[0].cookie;
-    document.getElementById('actionButtons').style.display='flex';
-    validityBox.className='validity-box valid';
-    validityBox.style.display='block';
-    validityBox.innerHTML=validCookies.length+' LIVE COOKIE(S) — '+invalidCookies.length+' invalid';
-    playBeep(900);
-  }else{
-    validityBox.className='validity-box invalid';
-    validityBox.style.display='block';
-    validityBox.innerHTML='0 LIVE COOKIES (found '+(validCookies.length+invalidCookies.length)+' total)';
-    playBeep(300);
-  }
-
+  document.getElementById('validCount').textContent=validCookies.length;
+  if(validCookies.length>0) lastValidCookie=validCookies[0].cookie;
   renderResults();
   addHistory(file.name,validCookies.length,invalidCookies.length);
 }
 
 function renderResults(){
+  var out=document.getElementById('results');
+  if(!validCookies.length && !invalidCookies.length){out.style.display='none';return}
+  out.style.display='block';
   var html='';
-  var results=document.getElementById('results');
-
-  if(validCookies.length===0 && invalidCookies.length===0){
-    results.style.display='none';
-    return;
-  }
-
-  results.style.display='block';
-
-  if(validCookies.length>0){
-    html+='<div class="result-section"><div class="result-header valid">VALID COOKIES ('+validCookies.length+')</div>';
+  if(validCookies.length){
+    html+='<div style="color:#39ff14;font-weight:bold;margin:10px 0 6px">VALID ('+validCookies.length+')</div>';
     for(var i=0;i<validCookies.length;i++){
-      var v=validCookies[i];
-      html+='<div class="cookie-item"><span class="num">#'+(i+1)+' — '+v.profile+'</span><span class="data">'+v.cookie+'</span>';
-      html+='<button class="copy-btn" onclick="copyCookie('+i+')">COPY</button></div>';
+      html+='<div class="result-item"><span class="head">#'+(i+1)+' — '+validCookies[i].profile+'</span>'+validCookies[i].cookie+'<br><button class="copy-btn" onclick="copyC('+i+')">COPY</button></div>';
     }
-    html+='</div>';
   }
-
-  if(invalidCookies.length>0){
-    html+='<div class="result-section"><div class="result-header invalid">INVALID COOKIES ('+invalidCookies.length+')</div>';
+  if(invalidCookies.length){
+    html+='<div style="color:#ff0000;font-weight:bold;margin:10px 0 6px">INVALID ('+invalidCookies.length+')</div>';
     for(var j=0;j<invalidCookies.length;j++){
-      var vv=invalidCookies[j];
-      html+='<div class="cookie-item invalid"><span class="num">#'+(j+1)+' — '+vv.error+'</span><span class="data">'+vv.cookie+'</span></div>';
+      html+='<div class="result-item invalid"><span class="head">#'+(j+1)+' — '+invalidCookies[j].error+'</span>'+invalidCookies[j].cookie+'</div>';
     }
-    html+='</div>';
   }
-
-  results.innerHTML=html;
+  out.innerHTML=html;
 }
 
-function copyCookie(i){
+function copyC(i){
   var c=validCookies[i].cookie;
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(c).then(function(){
-      playBeep(900);
-      alert('cookie #'+(i+1)+' copied');
-    }).catch(function(){
-      alert('copy failed');
-    });
-  }else{
-    alert(c);
-  }
+  if(navigator.clipboard) navigator.clipboard.writeText(c).then(function(){alert('copied #'+(i+1))}).catch(function(){alert(c)});
+  else alert(c);
 }
 
-function generateToken(){
-  var td=document.getElementById('tokenDisplay');
-  var count=parseInt(document.getElementById('cookieCount').textContent);
-  if(!count){alert('pehle valid cookie check karo');return}
-  td.style.display='block';
-  td.innerHTML='building session token...';
-  setTimeout(function(){
-    var token='NF-'+btoa(lastValidCookie).replace(/=/g,'').slice(0,32);
-    td.innerHTML='<strong>SESSION TOKEN:</strong><br><br><span style="color:#39ff14">'+token+'</span><br><br><span style="color:#ffcc00">use BYPASS button</span>';
-    playBeep(800);
-  },800);
-}
-
-function downloadExtension(){
-  var manifest={manifest_version:3,name:'NF Cookie Injector by Aftab',version:'1.0',description:'inject netflix cookies',permissions:['cookies','tabs'],host_permissions:['https://*.netflix.com/*'],action:{default_popup:'popup.html'}};
-  var popupHtml='<!doctype html><html><head><meta charset="utf-8"><style>body{width:300px;background:#000;color:#39ff14;font-family:monospace;padding:12px;margin:0}h3{margin:0 0 10px 0;font-size:14px}textarea{width:100%;height:110px;background:#000;color:#39ff14;border:1px solid #39ff14;padding:6px;font-size:11px;box-sizing:border-box;font-family:monospace}button{background:#39ff14;color:#000;border:none;padding:10px;font-weight:bold;cursor:pointer;width:100%;margin-top:8px;font-family:monospace}#s{margin-top:8px;font-size:11px;color:#ffcc00}</style></head><body><h3>NF Cookie Injector - Aftab</h3><textarea id="c" placeholder="NetflixId=...; SecureNetflixId=..."></textarea><button id="go">INJECT &amp; LOGIN</button><div id="s"></div><script src="popup.js"><\/script></body></html>';
-  var popupJs="document.getElementById('go').onclick=async()=>{var raw=document.getElementById('c').value.trim();var s=document.getElementById('s');if(!raw){s.textContent='no cookie';return}s.textContent='injecting...';var parts=raw.split(/[;\\n]/).map(x=>x.trim()).filter(Boolean);var ok=0;for(var i=0;i<parts.length;i++){var p=parts[i];var eq=p.indexOf('=');if(eq<0)continue;var name=p.substring(0,eq).trim();var value=p.substring(eq+1).trim();if(!name||!value)continue;try{await chrome.cookies.set({url:'https://www.netflix.com/',name:name,value:value,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+60*60*24*7});ok++}catch(e){console.log(e)}}s.textContent=ok+' cookies set';setTimeout(function(){chrome.tabs.create({url:'https://www.netflix.com/browse'});window.close()},700)};";
-  var bg="console.log('NF injector loaded');";
+function downloadExt(){
+  var manifest={manifest_version:3,name:'NF Cookie Injector',version:'1.0',permissions:['cookies','tabs'],host_permissions:['https://*.netflix.com/*'],action:{default_popup:'popup.html'}};
+  var popupHtml='<!doctype html><html><body style="width:280px;background:#000;color:#39ff14;font-family:monospace;padding:12px"><h3>NF Injector — Aftab</h3><textarea id="c" style="width:100%;height:100px;background:#000;color:#39ff14;border:1px solid #39ff14" placeholder="paste cookie"></textarea><button id="go" style="background:#39ff14;color:#000;padding:10px;border:none;width:100%;margin-top:8px;font-weight:bold">INJECT</button><div id="s" style="margin-top:8px;font-size:11px;color:#ffcc00"></div><script src="popup.js"><\/script></body></html>';
+  var popupJs="document.getElementById('go').onclick=async()=>{var r=document.getElementById('c').value.trim();var s=document.getElementById('s');if(!r){s.textContent='no cookie';return}var parts=r.split(/[;\\n]/);var ok=0;for(var i=0;i<parts.length;i++){var p=parts[i].trim();var eq=p.indexOf('=');if(eq<0)continue;var n=p.substring(0,eq).trim();var v=p.substring(eq+1).trim();if(!n||!v)continue;try{await chrome.cookies.set({url:'https://www.netflix.com/',name:n,value:v,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+604800});ok++}catch(e){}}s.textContent=ok+' set';setTimeout(function(){chrome.tabs.create({url:'https://www.netflix.com/browse'});window.close()},600)};";
   var zip=new JSZip();
-  zip.file('manifest.json',JSON.stringify(manifest,null,2));
+  zip.file('manifest.json',JSON.stringify(manifest));
   zip.file('popup.html',popupHtml);
   zip.file('popup.js',popupJs);
-  zip.file('background.js',bg);
-  zip.generateAsync({type:'blob'}).then(function(blob){
-    var a=document.createElement('a');
-    a.href=URL.createObjectURL(blob);
-    a.download='nf-injector-aftab.zip';
-    a.click();
-  });
+  zip.generateAsync({type:'blob'}).then(function(b){var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='nf-injector.zip';a.click()});
 }
 
-function bypassAndOpen(){
-  if(!lastValidCookie){alert('pehle valid cookie check karo');return}
-  var td=document.getElementById('tokenDisplay');
-  td.style.display='block';
-  td.innerHTML='preparing injection...';
-  downloadExtension();
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(lastValidCookie).then(function(){
-      setTimeout(function(){
-        td.innerHTML='cookie copied to clipboard!<br><span style="font-size:11px">load extension, paste, inject</span><br><br><code style="font-size:10px;word-break:break-all">'+lastValidCookie+'</code>';
-        playBeep(900);
-      },800);
-    }).catch(function(){
-      td.innerHTML='cookie ready<br><br><code style="font-size:10px;word-break:break-all">'+lastValidCookie+'</code>';
-    });
-  }
+function bypassNow(){
+  if(!lastValidCookie){alert('pehle cookie check karo');return}
+  downloadExt();
+  if(navigator.clipboard) navigator.clipboard.writeText(lastValidCookie).then(function(){alert('cookie copied. extension install karo aur paste karo.')});
 }
 
-/* HISTORY */
-function getHistory(){
-  try{ return JSON.parse(localStorage.getItem('nf_scan_history')||'[]'); }catch(e){ return []; }
-}
-function saveHistory(h){
-  try{ localStorage.setItem('nf_scan_history',JSON.stringify(h.slice(0,50))); }catch(e){}
-}
-function addHistory(source,valid,invalid){
+function getHistory(){try{return JSON.parse(localStorage.getItem('nf_hist')||'[]')}catch(e){return[]}}
+function addHistory(src,v,iv){var h=getHistory();h.unshift({time:new Date().toLocaleString(),src:src,v:v,iv:iv});localStorage.setItem('nf_hist',JSON.stringify(h.slice(0,50)))}
+function showHistory(){
   var h=getHistory();
-  h.unshift({time:new Date().toLocaleString(),source:source,valid:valid,invalid:invalid});
-  saveHistory(h);
-}
-function openHistory(){
   var list=document.getElementById('historyList');
-  var h=getHistory();
-  if(h.length===0){
-    list.innerHTML='<div class="history-empty">no history yet</div>';
-  }else{
+  if(!h.length){list.innerHTML='<div style="color:#888;text-align:center;padding:20px">no history</div>'}
+  else{
     var html='';
     for(var i=0;i<h.length;i++){
-      html+='<div class="history-item"><span class="time">'+h[i].time+'</span><span class="counts">source: '+h[i].source+'<br>valid: '+h[i].valid+' | invalid: '+h[i].invalid+'</span></div>';
+      html+='<div class="history-item"><span class="time">'+h[i].time+'</span>src: '+h[i].src+'<br>valid: '+h[i].v+' | invalid: '+h[i].iv+'</div>';
     }
     list.innerHTML=html;
   }
-  document.getElementById('historyPanel').classList.add('on');
+  document.getElementById('historyModal').classList.add('on');
 }
-function closeHistory(){
-  document.getElementById('historyPanel').classList.remove('on');
-}
+function hideHistory(){document.getElementById('historyModal').classList.remove('on')}
 
-if(window.pdfjsLib){pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'}
+if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 </script>
 </body>
 </html>
