@@ -17,10 +17,10 @@ html,body{margin:0;padding:0;background:#05060a;color:#e8f6ff;font-family:"SF Mo
 #matrix{position:fixed;inset:0;z-index:0;display:block;width:100vw;height:100vh;opacity:.32}
 .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:22px 16px 60px}
 
-.head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:12px}
 .head h1{margin:0;font-size:18px;letter-spacing:.15em;color:#fff;text-shadow:0 0 14px var(--nf),0 0 30px rgba(229,9,20,.55);font-weight:900}
 .head .sub{font-size:10px;color:var(--cy);letter-spacing:.3em;margin-top:4px}
-.pill{border:1px solid var(--cy);color:var(--cy);font-size:10px;letter-spacing:.25em;padding:5px 12px;border-radius:999px;background:rgba(0,240,255,.06);box-shadow:0 0 14px rgba(0,240,255,.25)}
+.pill{border:1px solid var(--cy);color:var(--cy);font-size:10px;letter-spacing:.25em;padding:5px 12px;border-radius:999px;background:rgba(0,240,255,.06);box-shadow:0 0 14px rgba(0,240,255,.25);white-space:nowrap}
 .pill.ok{border-color:#00ff88;color:#00ff88;background:rgba(0,255,136,.06);box-shadow:0 0 14px rgba(0,255,136,.3)}
 .pill.no{border-color:var(--mg);color:var(--mg);background:rgba(255,43,214,.06);box-shadow:0 0 14px rgba(255,43,214,.3)}
 
@@ -104,6 +104,10 @@ button:disabled{opacity:.35;cursor:not-allowed}
 .tag.bad{background:rgba(255,43,214,.12);color:var(--mg);border:1px solid var(--mg)}
 .hist-empty{color:#42506a;text-align:center;padding:24px;font-size:11px;letter-spacing:.2em}
 
+.copy-step{border:1px solid rgba(255,43,214,.3);border-radius:12px;padding:12px;margin-bottom:10px;background:rgba(255,43,214,.05)}
+.copy-step .step-label{color:var(--mg);font-size:10px;letter-spacing:.25em;font-weight:800;margin-bottom:6px}
+.copy-step .step-text{color:#b7c6dd;font-size:11px;line-height:1.5}
+
 .made{text-align:center;margin-top:26px;display:flex;flex-direction:column;align-items:center;gap:14px}
 .made-badge{display:inline-block;color:#04050a;background:linear-gradient(90deg,var(--cy),var(--mg));padding:11px 26px;border-radius:999px;font-size:12px;font-weight:900;letter-spacing:.35em;box-shadow:0 0 22px rgba(0,240,255,.6),0 0 44px rgba(255,43,214,.4),0 0 0 2px rgba(255,255,255,.08) inset;text-shadow:0 0 6px rgba(255,255,255,.35);animation:makerPulse 2.6s ease-in-out infinite;position:relative}
 .made-badge::before{content:"";position:absolute;inset:-6px;border-radius:999px;background:linear-gradient(90deg,var(--cy),var(--mg));filter:blur(14px);opacity:.55;z-index:-1}
@@ -157,7 +161,7 @@ button:disabled{opacity:.35;cursor:not-allowed}
     <div class="rprof" id="rotProfile"></div>
     <div class="rcookie" id="rotCookie"></div>
     <button class="mg" onclick="copyCurrent()">COPY THIS COOKIE</button>
-    <button class="red" onclick="loginNetflix()" id="loginBtn">LOGIN TO NETFLIX</button>
+    <button class="red" onclick="loginNetflix()">LOGIN TO NETFLIX</button>
     <div class="grid2" style="margin-top:9px">
       <button class="ghost" onclick="prevCookie()">← PREV</button>
       <button class="ghost mg" onclick="nextCookie()">NEXT →</button>
@@ -166,8 +170,8 @@ button:disabled{opacity:.35;cursor:not-allowed}
 
   <div class="panel">
     <h2>ACTIONS</h2>
-    <button onclick="openExtGuide()">DOWNLOAD EXTENSION</button>
-    <button class="ghost" onclick="openExtGuide()">EXTENSION INSTALL GUIDE</button>
+    <button onclick="downloadExt()">DOWNLOAD EXTENSION</button>
+    <button class="ghost" onclick="openGuide()">HOW TO USE (GUIDE)</button>
     <button class="mg" onclick="showHistory()">VIEW HISTORY</button>
   </div>
 
@@ -197,56 +201,38 @@ button:disabled{opacity:.35;cursor:not-allowed}
   </div>
 </div>
 
-<!-- EXTENSION GUIDE MODAL -->
-<div class="modal" id="extGuideModal">
+<!-- GUIDE MODAL -->
+<div class="modal" id="guideModal">
   <div class="modal-in">
-    <button class="modal-close" onclick="closeExtGuide()">×</button>
-    <h3>EXTENSION SETUP GUIDE</h3>
+    <button class="modal-close" onclick="closeGuide()">×</button>
+    <h3>HOW TO USE</h3>
 
-    <div class="ext-status" id="extStatusBox">
-      <span class="ext-dot"></span>
-      <span id="extStatusText">checking extension...</span>
+    <div class="copy-step">
+      <div class="step-label">STEP 1 — COOKIE CHECK</div>
+      <div class="step-text">Cookie paste karo, CHECK COOKIE tap karo. Valid mile to aage badho.</div>
     </div>
 
-    <div class="guide-step">
-      <div class="n">1</div>
-      <div class="title">DOWNLOAD EXTENSION</div>
-      <div class="desc">Neeche button se <code>nf-injector.zip</code> download karo.</div>
-      <button class="green" onclick="downloadExt()">DOWNLOAD ZIP</button>
+    <div class="copy-step">
+      <div class="step-label">STEP 2 — COPY COOKIE</div>
+      <div class="step-text">Rotation section mein <b>COPY THIS COOKIE</b> tap karo — cookie clipboard mein aa jaayegi.</div>
     </div>
 
-    <div class="guide-step">
-      <div class="n">2</div>
-      <div class="title">ZIP EXTRACT KARO</div>
-      <div class="desc">File manager se ZIP extract karo. Ek folder banega jisme <code>manifest.json</code> aur baaki files hongi.</div>
+    <div class="copy-step">
+      <div class="step-label">STEP 3 — EXTENSION OPEN</div>
+      <div class="step-text">Browser ke toolbar mein <b>NF Cookie Injector</b> icon tap karo (puzzle piece icon ya "N" logo).</div>
     </div>
 
-    <div class="guide-step">
-      <div class="n">3</div>
-      <div class="title">CHROME MEIN EXTENSIONS KHOLO</div>
-      <div class="desc">Address bar mein type karo: <code>chrome://extensions</code> — Enter dabao.</div>
+    <div class="copy-step">
+      <div class="step-label">STEP 4 — PASTE + INJECT</div>
+      <div class="step-text">Popup mein cookie paste karo (long-press → paste) → <b>INJECT</b> tap karo. Netflix khul jaayega logged in.</div>
     </div>
 
-    <div class="guide-step">
-      <div class="n">4</div>
-      <div class="title">DEVELOPER MODE ON</div>
-      <div class="desc">Page ke top-right corner mein <b>Developer mode</b> toggle ON karo.</div>
+    <div class="copy-step">
+      <div class="step-label">ALTERNATIVE — LOGIN BUTTON</div>
+      <div class="step-text">Agar extension panel se connect ho jaaye (EXT: READY), to <b>LOGIN TO NETFLIX</b> ek click mein kaam karega. Warna upar wale 4 steps use karo.</div>
     </div>
 
-    <div class="guide-step">
-      <div class="n">5</div>
-      <div class="title">LOAD UNPACKED</div>
-      <div class="desc">Top-left pe <b>Load unpacked</b> button dabao → extracted folder select karo. Extension install ho jaayega.</div>
-    </div>
-
-    <div class="guide-step">
-      <div class="n">6</div>
-      <div class="title">PANEL REFRESH</div>
-      <div class="desc">Panel page refresh karo. Top-right pill mein <b>EXT: READY</b> dikhega. Ab LOGIN TO NETFLIX ek click mein kaam karega.</div>
-    </div>
-
-    <button class="mg" onclick="checkExt()">CHECK AGAIN</button>
-    <button class="ghost" onclick="closeExtGuide()">CLOSE</button>
+    <button class="mg" onclick="closeGuide()">CLOSE</button>
   </div>
 </div>
 
@@ -303,38 +289,26 @@ setInterval(setClock,1000);setClock();
 /* ===== EXTENSION DETECTION ===== */
 function setExtUI(state){
   var pill=document.getElementById('extPill');
-  var box=document.getElementById('extStatusBox');
-  var txt=document.getElementById('extStatusText');
-  var loginBtn=document.getElementById('loginBtn');
-
   pill.className='pill';
-  box.className='ext-status';
   if(state==='ready'){
     extReady=true;
     pill.classList.add('ok');
     pill.textContent='EXT: READY';
-    box.classList.add('ok');
-    txt.textContent='Extension installed aur connected ✓';
-    if(loginBtn) loginBtn.disabled=false;
   }else if(state==='missing'){
     extReady=false;
     pill.classList.add('no');
-    pill.textContent='EXT: MISSING';
-    box.classList.add('no');
-    txt.textContent='Extension installed nahi hai — neeche steps follow karo';
+    pill.textContent='EXT: MANUAL';
   }else{
     extReady=false;
     pill.classList.add('no');
     pill.textContent='EXT: —';
-    box.classList.add('wait');
-    txt.textContent='checking...';
   }
 }
 
 function checkExt(){
   setExtUI('wait');
   if(typeof chrome==='undefined' || !chrome.runtime || !chrome.runtime.sendMessage){
-    setTimeout(function(){setExtUI('missing')},600);
+    setExtUI('missing');
     return;
   }
   try{
@@ -349,12 +323,11 @@ function checkExt(){
       if(!extReady && document.getElementById('extPill').textContent==='EXT: —'){
         setExtUI('missing');
       }
-    },2000);
+    },1500);
   }catch(e){
     setExtUI('missing');
   }
 }
-
 window.addEventListener('load',function(){checkExt()});
 
 /* ===== COOKIE EXTRACTOR ===== */
@@ -619,53 +592,51 @@ function loginNetflix(){
     return;
   }
 
-  if(!extReady){
-    openExtGuide();
-    return;
+  /* Step 1: cookie clipboard mein copy karo */
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(cookie).catch(function(){});
   }
 
-  try{
-    chrome.runtime.sendMessage({action:'inject', cookie:cookie}, function(resp){
-      if(chrome.runtime.lastError || !resp || !resp.ok){
-        if(navigator.clipboard) navigator.clipboard.writeText(cookie);
-        setExtUI('missing');
-        openExtGuide();
-      }
-    });
-  }catch(e){
-    if(navigator.clipboard) navigator.clipboard.writeText(cookie);
-    setExtUI('missing');
-    openExtGuide();
+  /* Step 2: extension available hai? inject karo */
+  if(extReady && typeof chrome!=='undefined' && chrome.runtime && chrome.runtime.sendMessage){
+    try{
+      chrome.runtime.sendMessage({action:'inject', cookie:cookie}, function(resp){
+        if(chrome.runtime.lastError || !resp || !resp.ok){
+          openGuide();
+        }
+      });
+      return;
+    }catch(e){}
   }
+
+  /* Step 3: extension nahi — guide kholo */
+  openGuide();
 }
 
-/* ===== EXTENSION GUIDE ===== */
-function openExtGuide(){
-  document.getElementById('extGuideModal').classList.add('on');
-  checkExt();
-}
-function closeExtGuide(){document.getElementById('extGuideModal').classList.remove('on')}
+/* ===== GUIDE ===== */
+function openGuide(){document.getElementById('guideModal').classList.add('on')}
+function closeGuide(){document.getElementById('guideModal').classList.remove('on')}
 
 /* ===== EXTENSION DOWNLOAD ===== */
 function downloadExt(){
   var manifest={
     manifest_version:3,
     name:'NF Cookie Injector',
-    version:'1.1',
+    version:'1.2',
     permissions:['cookies','tabs','scripting','storage'],
     host_permissions:['https://*.netflix.com/*'],
     background:{service_worker:'background.js'},
     action:{default_popup:'popup.html'},
-    externally_connectable:{matches:['https://*.vercel.app/*','http://localhost/*','https://*/*']}
+    externally_connectable:{matches:['https://*.vercel.app/*','http://localhost/*']}
   };
 
-  var backgroundJs = "chrome.runtime.onMessageExternal.addListener(function(req,sender,sendResponse){\n" +
-    "if(!req){sendResponse({ok:false});return true;}\n" +
-    "if(req.action==='ping'){sendResponse({ok:true,version:'1.1'});return true;}\n" +
-    "if(req.action!=='inject'){sendResponse({ok:false});return true;}\n" +
+  var backgroundJs = "function handleMsg(req,sendResponse){\n" +
+    "if(!req){sendResponse({ok:false});return;}\n" +
+    "if(req.action==='ping'){sendResponse({ok:true,version:'1.2'});return;}\n" +
+    "if(req.action!=='inject'){sendResponse({ok:false});return;}\n" +
     "var parts=(req.cookie||'').split(';').map(function(p){return p.trim()}).filter(Boolean);\n" +
     "var done=0,total=parts.length;\n" +
-    "if(!total){sendResponse({ok:false});return true;}\n" +
+    "if(!total){sendResponse({ok:false});return;}\n" +
     "function finish(){if(++done>=total){chrome.tabs.create({url:'https://www.netflix.com/browse'});sendResponse({ok:true});}}\n" +
     "parts.forEach(function(p){\n" +
     "var eq=p.indexOf('=');\n" +
@@ -673,12 +644,31 @@ function downloadExt(){
     "var name=p.substring(0,eq).trim(),value=p.substring(eq+1).trim();\n" +
     "chrome.cookies.set({url:'https://www.netflix.com/',name:name,value:value,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+2592000},function(){finish();});\n" +
     "});\n" +
-    "return true;\n" +
-    "});";
+    "}\n" +
+    "chrome.runtime.onMessageExternal.addListener(function(req,sender,sendResponse){handleMsg(req,sendResponse);return true;});\n" +
+    "chrome.runtime.onMessage.addListener(function(req,sender,sendResponse){handleMsg(req,sendResponse);return true;});";
 
-  var popupHtml='<!doctype html><html><body style="width:280px;background:#000;color:#00f0ff;font-family:monospace;padding:12px"><h3>NF Injector</h3><textarea id="c" style="width:100%;height:100px;background:#000;color:#00f0ff;border:1px solid #00f0ff" placeholder="paste cookie"></textarea><button id="go" style="background:#00f0ff;color:#000;padding:10px;border:none;width:100%;margin-top:8px;font-weight:bold">INJECT</button><div id="s" style="margin-top:8px;font-size:11px;color:#ff2bd6"></div><script src="popup.js"><\/script></body></html>';
+  var popupHtml='<!doctype html><html><head><meta charset="utf-8"><style>body{width:300px;background:#0a0c14;color:#00f0ff;font-family:monospace;padding:14px;margin:0}h3{margin:0 0 10px;color:#ff2bd6;letter-spacing:.2em;font-size:13px}textarea{width:100%;height:110px;background:#04050a;color:#00f0ff;border:1px solid rgba(0,240,255,.35);border-radius:8px;padding:8px;font-family:inherit;font-size:11px;box-sizing:border-box;resize:vertical;outline:none}button{width:100%;background:#00f0ff;color:#000;padding:11px;border:none;border-radius:8px;margin-top:10px;font-weight:900;letter-spacing:.15em;cursor:pointer;font-family:inherit}button:hover{box-shadow:0 0 18px #00f0ff}#s{margin-top:10px;font-size:11px;color:#ff2bd6;text-align:center;min-height:14px}</style></head><body><h3>NF INJECTOR</h3><textarea id="c" placeholder="paste netflix cookie here"></textarea><button id="go">INJECT → OPEN NETFLIX</button><div id="s"></div><script src="popup.js"><\/script></body></html>';
 
-  var popupJs="document.getElementById('go').onclick=async()=>{var r=document.getElementById('c').value.trim();var s=document.getElementById('s');if(!r){s.textContent='no cookie';return}var parts=r.split(/[;\\n]/);var ok=0;parts.forEach(function(p){var eq=p.indexOf('=');if(eq<0)return;var n=p.substring(0,eq).trim();var v=p.substring(eq+1).trim();if(!n||!v)return;chrome.cookies.set({url:'https://www.netflix.com/',name:n,value:v,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+2592000},function(){ok++;s.textContent=ok+' set';});});setTimeout(function(){chrome.tabs.create({url:'https://www.netflix.com/browse'});window.close()},900)};";
+  var popupJs="document.getElementById('go').onclick=function(){\n" +
+    "var r=document.getElementById('c').value.trim();\n" +
+    "var s=document.getElementById('s');\n" +
+    "if(!r){s.textContent='no cookie';return}\n" +
+    "var parts=r.split(/[;\\n]/);\n" +
+    "var total=parts.length,done=0,ok=0;\n" +
+    "parts.forEach(function(p){\n" +
+    "var eq=p.indexOf('=');\n" +
+    "if(eq<0){done++;return;}\n" +
+    "var n=p.substring(0,eq).trim();\n" +
+    "var v=p.substring(eq+1).trim();\n" +
+    "if(!n||!v){done++;return;}\n" +
+    "chrome.cookies.set({url:'https://www.netflix.com/',name:n,value:v,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+2592000},function(){\n" +
+    "ok++;done++;\n" +
+    "s.textContent=ok+' set';\n" +
+    "if(done>=total){setTimeout(function(){chrome.tabs.create({url:'https://www.netflix.com/browse'});window.close()},500)}\n" +
+    "});\n" +
+    "});\n" +
+    "};";
 
   var zip=new JSZip();
   zip.file('manifest.json',JSON.stringify(manifest));
