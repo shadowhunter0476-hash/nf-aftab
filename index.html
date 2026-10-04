@@ -14,17 +14,15 @@
 *{box-sizing:border-box}
 html,body{margin:0;padding:0;background:#05060a;color:#e8f6ff;font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;min-height:100vh}
 
-#matrix{
-  position:fixed;inset:0;z-index:0;
-  display:block;width:100vw;height:100vh;
-  opacity:.32;
-}
+#matrix{position:fixed;inset:0;z-index:0;display:block;width:100vw;height:100vh;opacity:.32}
 .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;padding:22px 16px 60px}
 
 .head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
 .head h1{margin:0;font-size:18px;letter-spacing:.15em;color:#fff;text-shadow:0 0 14px var(--nf),0 0 30px rgba(229,9,20,.55);font-weight:900}
 .head .sub{font-size:10px;color:var(--cy);letter-spacing:.3em;margin-top:4px}
 .pill{border:1px solid var(--cy);color:var(--cy);font-size:10px;letter-spacing:.25em;padding:5px 12px;border-radius:999px;background:rgba(0,240,255,.06);box-shadow:0 0 14px rgba(0,240,255,.25)}
+.pill.ok{border-color:#00ff88;color:#00ff88;background:rgba(0,255,136,.06);box-shadow:0 0 14px rgba(0,255,136,.3)}
+.pill.no{border-color:var(--mg);color:var(--mg);background:rgba(255,43,214,.06);box-shadow:0 0 14px rgba(255,43,214,.3)}
 
 .clock{font-size:10px;color:#7a8399;letter-spacing:.25em;text-align:center;margin-bottom:14px}
 
@@ -44,6 +42,7 @@ button.red{background:var(--nf);color:#fff;box-shadow:0 0 22px rgba(229,9,20,.65
 button.red:hover{box-shadow:0 0 34px rgba(229,9,20,.95);transform:translateY(-1px)}
 button.ghost{background:transparent;color:var(--cy);border:1px solid var(--cy);box-shadow:none}
 button.ghost.mg{color:var(--mg);border-color:var(--mg)}
+button.green{background:#00ff88;color:#000;box-shadow:0 0 18px rgba(0,255,136,.45)}
 button:disabled{opacity:.35;cursor:not-allowed}
 
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -76,10 +75,25 @@ button:disabled{opacity:.35;cursor:not-allowed}
 .rprof{text-align:center;font-size:10px;color:var(--cy);letter-spacing:.15em;margin:6px 0;word-break:break-all}
 .rcookie{background:#04050a;border:1px solid var(--line);border-radius:8px;padding:9px;font-size:9px;word-break:break-all;max-height:84px;overflow-y:auto;color:#9fe9ff;margin:8px 0}
 
-.modal{display:none;position:fixed;inset:0;background:rgba(2,3,7,.92);backdrop-filter:blur(4px);z-index:500;overflow-y:auto;padding:20px}
+.modal{display:none;position:fixed;inset:0;background:rgba(2,3,7,.94);backdrop-filter:blur(6px);z-index:500;overflow-y:auto;padding:20px}
 .modal.on{display:block}
-.modal-in{max-width:480px;margin:40px auto;background:#0a0c14;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 0 40px rgba(0,240,255,.2)}
+.modal-in{max-width:480px;margin:40px auto;background:#0a0c14;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:0 0 40px rgba(0,240,255,.2);position:relative}
 .modal-in h3{margin:0 0 14px;color:var(--mg);font-size:13px;letter-spacing:.3em;text-align:center}
+.modal-close{position:absolute;top:12px;right:12px;width:32px;height:32px;padding:0;margin:0;border-radius:50%;background:transparent;color:var(--mg);border:1px solid var(--mg);font-size:16px;font-weight:900;line-height:1;cursor:pointer;box-shadow:none}
+.modal-close:hover{background:rgba(255,43,214,.15);box-shadow:none;transform:none}
+
+.guide-step{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:rgba(0,240,255,.03);position:relative;padding-left:46px}
+.guide-step .n{position:absolute;left:12px;top:12px;width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--cy),var(--mg));color:#04050a;font-weight:900;font-size:11px;display:flex;align-items:center;justify-content:center;box-shadow:0 0 12px rgba(0,240,255,.5)}
+.guide-step .title{color:var(--cy);font-size:12px;font-weight:800;letter-spacing:.08em;margin-bottom:4px}
+.guide-step .desc{color:#b7c6dd;font-size:11px;line-height:1.5}
+.guide-step code{background:#04050a;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:#9fe9ff;font-size:10px;word-break:break-all}
+
+.ext-status{display:flex;align-items:center;gap:10px;padding:11px;border-radius:10px;margin-bottom:12px;font-size:11px;letter-spacing:.08em;font-weight:700}
+.ext-status.ok{background:rgba(0,255,136,.08);border:1px solid #00ff88;color:#00ff88}
+.ext-status.no{background:rgba(255,43,214,.08);border:1px solid var(--mg);color:var(--mg)}
+.ext-status.wait{background:rgba(255,214,0,.06);border:1px solid #ffd600;color:#ffd600}
+.ext-dot{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
+
 .hist-item{border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;font-size:10px;color:#b7c6dd;cursor:pointer;transition:border-color .2s,background .2s;position:relative}
 .hist-item:hover{border-color:var(--cy);background:rgba(0,240,255,.05)}
 .hist-item .t{color:var(--cy);display:block;margin-bottom:4px;letter-spacing:.1em}
@@ -110,7 +124,7 @@ button:disabled{opacity:.35;cursor:not-allowed}
       <h1>NETFLIX PANEL</h1>
       <div class="sub">COOKIE SYSTEM // AFTAB</div>
     </div>
-    <div class="pill">LIVE</div>
+    <div class="pill" id="extPill">EXT: —</div>
   </div>
   <div class="clock" id="clock">CORE: BYPASS</div>
 
@@ -143,7 +157,7 @@ button:disabled{opacity:.35;cursor:not-allowed}
     <div class="rprof" id="rotProfile"></div>
     <div class="rcookie" id="rotCookie"></div>
     <button class="mg" onclick="copyCurrent()">COPY THIS COOKIE</button>
-    <button class="red" onclick="loginNetflix()">LOGIN TO NETFLIX</button>
+    <button class="red" onclick="loginNetflix()" id="loginBtn">LOGIN TO NETFLIX</button>
     <div class="grid2" style="margin-top:9px">
       <button class="ghost" onclick="prevCookie()">← PREV</button>
       <button class="ghost mg" onclick="nextCookie()">NEXT →</button>
@@ -152,7 +166,8 @@ button:disabled{opacity:.35;cursor:not-allowed}
 
   <div class="panel">
     <h2>ACTIONS</h2>
-    <button onclick="downloadExt()">DOWNLOAD EXTENSION</button>
+    <button onclick="openExtGuide()">DOWNLOAD EXTENSION</button>
+    <button class="ghost" onclick="openExtGuide()">EXTENSION INSTALL GUIDE</button>
     <button class="mg" onclick="showHistory()">VIEW HISTORY</button>
   </div>
 
@@ -169,14 +184,69 @@ button:disabled{opacity:.35;cursor:not-allowed}
   </div>
 </div>
 
+<!-- HISTORY MODAL -->
 <div class="modal" id="historyModal">
   <div class="modal-in">
+    <button class="modal-close" onclick="hideHistory()">×</button>
     <h3>SCAN HISTORY</h3>
     <div class="grid2" style="margin-bottom:12px">
       <button class="ghost" onclick="hideHistory()">CLOSE</button>
       <button class="red" onclick="clearHistory()">CLEAR ALL</button>
     </div>
     <div id="historyList" style="margin-top:6px"></div>
+  </div>
+</div>
+
+<!-- EXTENSION GUIDE MODAL -->
+<div class="modal" id="extGuideModal">
+  <div class="modal-in">
+    <button class="modal-close" onclick="closeExtGuide()">×</button>
+    <h3>EXTENSION SETUP GUIDE</h3>
+
+    <div class="ext-status" id="extStatusBox">
+      <span class="ext-dot"></span>
+      <span id="extStatusText">checking extension...</span>
+    </div>
+
+    <div class="guide-step">
+      <div class="n">1</div>
+      <div class="title">DOWNLOAD EXTENSION</div>
+      <div class="desc">Neeche button se <code>nf-injector.zip</code> download karo.</div>
+      <button class="green" onclick="downloadExt()">DOWNLOAD ZIP</button>
+    </div>
+
+    <div class="guide-step">
+      <div class="n">2</div>
+      <div class="title">ZIP EXTRACT KARO</div>
+      <div class="desc">File manager se ZIP extract karo. Ek folder banega jisme <code>manifest.json</code> aur baaki files hongi.</div>
+    </div>
+
+    <div class="guide-step">
+      <div class="n">3</div>
+      <div class="title">CHROME MEIN EXTENSIONS KHOLO</div>
+      <div class="desc">Address bar mein type karo: <code>chrome://extensions</code> — Enter dabao.</div>
+    </div>
+
+    <div class="guide-step">
+      <div class="n">4</div>
+      <div class="title">DEVELOPER MODE ON</div>
+      <div class="desc">Page ke top-right corner mein <b>Developer mode</b> toggle ON karo.</div>
+    </div>
+
+    <div class="guide-step">
+      <div class="n">5</div>
+      <div class="title">LOAD UNPACKED</div>
+      <div class="desc">Top-left pe <b>Load unpacked</b> button dabao → extracted folder select karo. Extension install ho jaayega.</div>
+    </div>
+
+    <div class="guide-step">
+      <div class="n">6</div>
+      <div class="title">PANEL REFRESH</div>
+      <div class="desc">Panel page refresh karo. Top-right pill mein <b>EXT: READY</b> dikhega. Ab LOGIN TO NETFLIX ek click mein kaam karega.</div>
+    </div>
+
+    <button class="mg" onclick="checkExt()">CHECK AGAIN</button>
+    <button class="ghost" onclick="closeExtGuide()">CLOSE</button>
   </div>
 </div>
 
@@ -224,10 +294,68 @@ var invalidCookies=[];
 var lastValidCookie='';
 var allChunks=[];
 var rotIndex=0;
+var extReady=false;
 
 /* ===== CLOCK ===== */
 function setClock(){document.getElementById('clock').textContent='CORE: BYPASS // '+new Date().toLocaleTimeString('en-US',{hour12:false})}
 setInterval(setClock,1000);setClock();
+
+/* ===== EXTENSION DETECTION ===== */
+function setExtUI(state){
+  var pill=document.getElementById('extPill');
+  var box=document.getElementById('extStatusBox');
+  var txt=document.getElementById('extStatusText');
+  var loginBtn=document.getElementById('loginBtn');
+
+  pill.className='pill';
+  box.className='ext-status';
+  if(state==='ready'){
+    extReady=true;
+    pill.classList.add('ok');
+    pill.textContent='EXT: READY';
+    box.classList.add('ok');
+    txt.textContent='Extension installed aur connected ✓';
+    if(loginBtn) loginBtn.disabled=false;
+  }else if(state==='missing'){
+    extReady=false;
+    pill.classList.add('no');
+    pill.textContent='EXT: MISSING';
+    box.classList.add('no');
+    txt.textContent='Extension installed nahi hai — neeche steps follow karo';
+  }else{
+    extReady=false;
+    pill.classList.add('no');
+    pill.textContent='EXT: —';
+    box.classList.add('wait');
+    txt.textContent='checking...';
+  }
+}
+
+function checkExt(){
+  setExtUI('wait');
+  if(typeof chrome==='undefined' || !chrome.runtime || !chrome.runtime.sendMessage){
+    setTimeout(function(){setExtUI('missing')},600);
+    return;
+  }
+  try{
+    chrome.runtime.sendMessage({action:'ping'}, function(resp){
+      if(chrome.runtime.lastError || !resp || !resp.ok){
+        setExtUI('missing');
+      }else{
+        setExtUI('ready');
+      }
+    });
+    setTimeout(function(){
+      if(!extReady && document.getElementById('extPill').textContent==='EXT: —'){
+        setExtUI('missing');
+      }
+    },2000);
+  }catch(e){
+    setExtUI('missing');
+  }
+}
+
+window.addEventListener('load',function(){checkExt()});
 
 /* ===== COOKIE EXTRACTOR ===== */
 function extract(raw){
@@ -479,7 +607,7 @@ function copyCurrent(){
   }
 }
 
-/* ===== LOGIN TO NETFLIX (extension inject) ===== */
+/* ===== LOGIN TO NETFLIX ===== */
 function loginNetflix(){
   var cookie='';
   if(validCookies && validCookies.length>0){
@@ -490,23 +618,33 @@ function loginNetflix(){
     alert('pehle cookie check karo');
     return;
   }
-  if(typeof chrome!=='undefined' && chrome.runtime && chrome.runtime.sendMessage){
-    try{
-      chrome.runtime.sendMessage({action:'inject', cookie:cookie}, function(resp){
-        if(chrome.runtime.lastError){
-          if(navigator.clipboard) navigator.clipboard.writeText(cookie);
-          alert('cookie copied. pehle DOWNLOAD EXTENSION karke browser mein load karo, phir dobara LOGIN dabao.');
-        }
-      });
-    }catch(e){
-      if(navigator.clipboard) navigator.clipboard.writeText(cookie);
-      alert('cookie copied. extension install karo phir dobara try karo.');
-    }
-  }else{
+
+  if(!extReady){
+    openExtGuide();
+    return;
+  }
+
+  try{
+    chrome.runtime.sendMessage({action:'inject', cookie:cookie}, function(resp){
+      if(chrome.runtime.lastError || !resp || !resp.ok){
+        if(navigator.clipboard) navigator.clipboard.writeText(cookie);
+        setExtUI('missing');
+        openExtGuide();
+      }
+    });
+  }catch(e){
     if(navigator.clipboard) navigator.clipboard.writeText(cookie);
-    alert('cookie copied. DOWNLOAD EXTENSION karke browser mein load karo, phir LOGIN dabao — ek click mein Netflix khulega.');
+    setExtUI('missing');
+    openExtGuide();
   }
 }
+
+/* ===== EXTENSION GUIDE ===== */
+function openExtGuide(){
+  document.getElementById('extGuideModal').classList.add('on');
+  checkExt();
+}
+function closeExtGuide(){document.getElementById('extGuideModal').classList.remove('on')}
 
 /* ===== EXTENSION DOWNLOAD ===== */
 function downloadExt(){
@@ -522,7 +660,9 @@ function downloadExt(){
   };
 
   var backgroundJs = "chrome.runtime.onMessageExternal.addListener(function(req,sender,sendResponse){\n" +
-    "if(!req||req.action!=='inject'){sendResponse({ok:false});return true;}\n" +
+    "if(!req){sendResponse({ok:false});return true;}\n" +
+    "if(req.action==='ping'){sendResponse({ok:true,version:'1.1'});return true;}\n" +
+    "if(req.action!=='inject'){sendResponse({ok:false});return true;}\n" +
     "var parts=(req.cookie||'').split(';').map(function(p){return p.trim()}).filter(Boolean);\n" +
     "var done=0,total=parts.length;\n" +
     "if(!total){sendResponse({ok:false});return true;}\n" +
@@ -538,7 +678,7 @@ function downloadExt(){
 
   var popupHtml='<!doctype html><html><body style="width:280px;background:#000;color:#00f0ff;font-family:monospace;padding:12px"><h3>NF Injector</h3><textarea id="c" style="width:100%;height:100px;background:#000;color:#00f0ff;border:1px solid #00f0ff" placeholder="paste cookie"></textarea><button id="go" style="background:#00f0ff;color:#000;padding:10px;border:none;width:100%;margin-top:8px;font-weight:bold">INJECT</button><div id="s" style="margin-top:8px;font-size:11px;color:#ff2bd6"></div><script src="popup.js"><\/script></body></html>';
 
-  var popupJs="document.getElementById('go').onclick=async()=>{var r=document.getElementById('c').value.trim();var s=document.getElementById('s');if(!r){s.textContent='no cookie';return}var parts=r.split(/[;\\n]/);var ok=0;var pending=parts.length;parts.forEach(function(p){var eq=p.indexOf('=');if(eq<0){pending--;return}var n=p.substring(0,eq).trim();var v=p.substring(eq+1).trim();if(!n||!v){pending--;return}chrome.cookies.set({url:'https://www.netflix.com/',name:n,value:v,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+2592000},function(){ok++;s.textContent=ok+' set';});});setTimeout(function(){chrome.tabs.create({url:'https://www.netflix.com/browse'});window.close()},900)};";
+  var popupJs="document.getElementById('go').onclick=async()=>{var r=document.getElementById('c').value.trim();var s=document.getElementById('s');if(!r){s.textContent='no cookie';return}var parts=r.split(/[;\\n]/);var ok=0;parts.forEach(function(p){var eq=p.indexOf('=');if(eq<0)return;var n=p.substring(0,eq).trim();var v=p.substring(eq+1).trim();if(!n||!v)return;chrome.cookies.set({url:'https://www.netflix.com/',name:n,value:v,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+2592000},function(){ok++;s.textContent=ok+' set';});});setTimeout(function(){chrome.tabs.create({url:'https://www.netflix.com/browse'});window.close()},900)};";
 
   var zip=new JSZip();
   zip.file('manifest.json',JSON.stringify(manifest));
